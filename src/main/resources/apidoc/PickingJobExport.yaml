@@ -1,0 +1,70 @@
+swagger: 2.0
+info:
+  version: "0.0.1"
+  title: PickingJobExport API
+basePath: /picking
+paths:
+  /job:
+    get:
+      description:
+      parameters:
+        - name: pageSize
+          in: query
+          type: number
+          description: size of list
+          required: false
+        - name: page
+          in: query
+          type: integer
+          description: page
+          required: false
+        - name: sortingDirection
+          in: query
+          type: string
+          description: DESC | ASC
+          required: false
+        - name: sortingFields
+          in: query
+          type: string
+          description: sorting fields
+          required: false
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfPickingJobExport
+            type: array
+            items:
+              $ref: '#/definitions/PickingJobExport'
+    get:
+      parameters:
+        - name: PickingJobExport
+          in: body
+          description: The PickingJobExport JSON you want to post
+          schema:
+            $ref: '#/definitions/PickingJobExport'
+    post:
+      parameters:
+        - name: PickingJobExport
+          in: body
+          description: The PickingJobExport JSON you want to post
+          schema:
+            $ref: '#/definitions/PickingJobExport'
+    put:
+      parameters:
+        - name: PickingJobExport
+          in: body
+          description: The PickingJobExport JSON you want to post
+          schema:
+            $ref: '#/definitions/PickingJobExport'
+    delete:
+      parameters:
+        - name: PickingJobExport
+          in: body
+          description: The PickingJobExport JSON you want to post
+          schema:
+            $ref: '#/definitions/PickingJobExport'
+definitions:
+  PickingJobExport:
+    type: object
+    properties:

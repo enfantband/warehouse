@@ -1,0 +1,70 @@
+swagger: 2.0
+info:
+  version: "0.0.1"
+  title: WarehouseInbound API
+basePath: /warehouse
+paths:
+  /inbound:
+    get:
+      description:
+      parameters:
+        - name: pageSize
+          in: query
+          type: number
+          description: size of list
+          required: false
+        - name: page
+          in: query
+          type: integer
+          description: page
+          required: false
+        - name: sortingDirection
+          in: query
+          type: string
+          description: DESC | ASC
+          required: false
+        - name: sortingFields
+          in: query
+          type: string
+          description: sorting fields
+          required: false
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfWarehouseInbound
+            type: array
+            items:
+              $ref: '#/definitions/WarehouseInbound'
+    get:
+      parameters:
+        - name: WarehouseInbound
+          in: body
+          description: The WarehouseInbound JSON you want to post
+          schema:
+            $ref: '#/definitions/WarehouseInbound'
+    post:
+      parameters:
+        - name: WarehouseInbound
+          in: body
+          description: The WarehouseInbound JSON you want to post
+          schema:
+            $ref: '#/definitions/WarehouseInbound'
+    put:
+      parameters:
+        - name: WarehouseInbound
+          in: body
+          description: The WarehouseInbound JSON you want to post
+          schema:
+            $ref: '#/definitions/WarehouseInbound'
+    delete:
+      parameters:
+        - name: WarehouseInbound
+          in: body
+          description: The WarehouseInbound JSON you want to post
+          schema:
+            $ref: '#/definitions/WarehouseInbound'
+definitions:
+  WarehouseInbound:
+    type: object
+    properties:

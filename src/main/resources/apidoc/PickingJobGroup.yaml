@@ -1,0 +1,70 @@
+swagger: 2.0
+info:
+  version: "0.0.1"
+  title: PickingJobGroup API
+basePath: /picking
+paths:
+  /job:
+    get:
+      description:
+      parameters:
+        - name: pageSize
+          in: query
+          type: number
+          description: size of list
+          required: false
+        - name: page
+          in: query
+          type: integer
+          description: page
+          required: false
+        - name: sortingDirection
+          in: query
+          type: string
+          description: DESC | ASC
+          required: false
+        - name: sortingFields
+          in: query
+          type: string
+          description: sorting fields
+          required: false
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfPickingJobGroup
+            type: array
+            items:
+              $ref: '#/definitions/PickingJobGroup'
+    get:
+      parameters:
+        - name: PickingJobGroup
+          in: body
+          description: The PickingJobGroup JSON you want to post
+          schema:
+            $ref: '#/definitions/PickingJobGroup'
+    post:
+      parameters:
+        - name: PickingJobGroup
+          in: body
+          description: The PickingJobGroup JSON you want to post
+          schema:
+            $ref: '#/definitions/PickingJobGroup'
+    put:
+      parameters:
+        - name: PickingJobGroup
+          in: body
+          description: The PickingJobGroup JSON you want to post
+          schema:
+            $ref: '#/definitions/PickingJobGroup'
+    delete:
+      parameters:
+        - name: PickingJobGroup
+          in: body
+          description: The PickingJobGroup JSON you want to post
+          schema:
+            $ref: '#/definitions/PickingJobGroup'
+definitions:
+  PickingJobGroup:
+    type: object
+    properties:

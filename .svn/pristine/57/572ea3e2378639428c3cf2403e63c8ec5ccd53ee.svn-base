@@ -1,0 +1,91 @@
+spring.profiles.active=dev
+logging.level.org.springframework.security=DEBUG
+auth.server.clientId=samsbeauty-warehouse
+auth.server.clientSecret=ssssssssssssssssssssssssss-warehous!!@
+auth.server.url=http://localhost:10001/oauth/check_token
+
+
+spring.datasource.url=jdbc:mysql://192.168.10.203:3306/samsbeautyWarehouse
+spring.datasource.username=dbsamsuser
+spring.datasource.password=RoqkfElqlToatm1000!!
+spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+spring.datasource.test-on-borrow=true
+spring.datasource.validationQuery=SELECT 1
+
+#spring.datasource.url=jdbc:mysql://192.168.1.101:3306/samsbeautyWarehouse
+#spring.datasource.username=newsamsbeauty
+#spring.datasource.password=samsBeauty1121
+#spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+#spring.datasource.test-on-borrow=true
+#spring.datasource.validationQuery=SELECT 1
+
+jpa.properties.hibernate.enable_lazy_load_no_trans=true
+
+page.default.num=20
+
+#inventory API
+samsbeauty.api.inventory=inventory/InventoryListJSON.sams
+samsbeauty.api.inventory.status=inventory/InventoryStatusList.sams
+samsbeauty.api.inventory.history.list=inventory/InventoryHistoryListJSON.sams
+samsbeauty.api.inventory.history.insert=inventory/InventoryHistoryInstJSON.sams
+samsbeauty.api.inventory.history.reason=inventory/InventoryReasonList.sams
+samsbeauty.api.inventory.update=inventory/InventoryUpdtJSON.sams
+samsbeauty.api.inventory.cost=inventory/PurchasePriceHistoryListJSON.sams
+samsbeauty.api.inventory.cost.insert=inventory/PurchasePriceHistoryInstJSON.sams
+samsbeauty.api.inventory.cost.update=inventory/PurchasePriceHistoryUpdtJSON.sams
+samsbeauty.api.inventory.cost.delete=inventory/PurchasePriceHistoryDelJSON.sams
+samsbeauty.api.inventory.location=inventory/InventoryLocationList.sams
+samsbeauty.api.inventory.location.update=inventory/InventoryLocationUpdtJSON.sams
+samsbeauty.api.inventory.order=inventory/InventoryOrderToVendorInstJSON.sams
+samsbeauty.api.inventory.unitoption.status.update=inventory/ProductUnitOptionStatusUpdtJSON.sams
+
+#product API
+samsbeauty.api.product.host.update=products/ProductsViewByHostUpdtJSON.sams
+
+#outbound API
+samsbeauty.api.outbound.order.itemlist=orderList/OutboundOrderItemViewJSON.sams
+samsbeauty.api.outbound.order.insert=inOutBound/OutboundInstJSON.sams
+
+#pending API
+samsbeauty.api.pending.order=pendingOrder/PendingOrderListJSON.sams
+samsbeauty.api.pending.ready=pendingOrder/PendingOrderReadyToShipUpdtJSON.sams
+samsbeauty.api.pending.finish=pendingOrder/ScanPendingOrderItemsInstJSON.sams
+samsbeauty.api.pending.clear=inOutBound/ClearTransactionJSON.sams
+
+#order API
+samsbeauty.api.order.count=orderList/NewOrderCountJSON.sams
+samsbeauty.api.order.items=orderList/OrderItemListForPickingJSON.sams
+samsbeauty.api.order.memo=orderMemoList/OrderMemoListViewJSON.sams
+samsbeauty.api.order.picking=orderList/OrderInfoForPickingJSON.sams
+
+#vendor API
+samsbeauty.api.vendor.list=vendor/VendorListJSON.sams
+
+#warehouse old API
+samsbeauty.api.warehouse.item.insert=warehouse/WarehouseItemInstJSON.sams
+samsbeauty.api.warehouse.item.list=warehouse/WarehouseItemListJSON.sams
+samsbeauty.api.warehouse.item.delete=warehouse/WarehouseItemDelJSON.sams
+samsbeauty.api.warehouse.item.transfer=warehouse/WarehouseItemTransferInst.sams
+samsbeauty.api.warehouse.items.delete=warehouse/WarehouseItemsDelJSON.sams
+samsbeauty.api.warehouse.items.empty=warehouse/WarehouseItemsMakeEmptyJSON.sams
+
+
+spring.thymeleaf.cache=false
+
+
+security.basic.enabled=false
+management.security.enabled=false
+
+# jwt token setting 
+# expiration time in minutes
+security.jwt.tokenExpirationTime=1440
+security.jwt.refreshTokenExpTime=2880
+security.jwt.tokenIssuer=samsbeautywms
+security.jwt.tokenSigningKey=zxASasdlkjzxlcvpiabdas 
+
+# dir 
+pickinglist.pdf.dir=files
+
+# printer
+#printer.server.url=api.sendbox.samsbeauty.com
+printer.server.url=192.168.10.198

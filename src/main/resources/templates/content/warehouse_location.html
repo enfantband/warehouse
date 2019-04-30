@@ -1,0 +1,1493 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="page-title txt-color-blueDark">
+			<i class="fa fa-location-arrow fa-fw "></i> Warehouse Location
+		</h1>
+	</div>
+</div>
+<div class="row">
+	
+	<div class="col-sm-12">
+		<div class="well">
+			<form class="form-inline">
+				<div class="form-group">
+					<select name="warehouse" class="form-control"
+						id="warehouse-selector">
+						<option value="" selected="selected">- Warehouse -</option>
+					</select> 
+					<a href="javascript:showWarehouseManage();" class="btn btn-default btn-sm"><i class="fa fa-gear fa-lg"></i></a>
+				</div>
+				<div class="form-group">
+					<select name="warehouse-aisle" class="form-control"
+						id="warehouse-aisle-selector">
+						<option value="" selected="selected">- Aisle -</option>
+					</select> <a href="javascript:showWarehouseAisleManage();"
+						class="btn btn-default btn-sm"><i
+						class="fa fa-gear fa-lg"></i></a>
+				</div>
+				<div class="form-group">
+					<select name="warehouse-group" class="form-control"
+						id="warehouse-group-selector">
+						<option value="" selected="selected">- Group -</option>
+					</select> <a href="javascript:showWarehouseGroupManage();"
+						class="btn btn-default btn-sm"><i
+						class="fa fa-gear fa-lg"></i></a>
+				</div>
+				<div class="form-group">
+					<select name="warehouse-subgroup" class="form-control"
+						id="warehouse-subgroup-selector">
+						<option value="" selected="selected">- Section -</option>
+					</select> <a href="javascript:showWarehouseSubgroupManage();"
+						class="btn btn-default btn-sm"><i
+						class="fa fa-gear fa-lg"></i></a>
+				</div>
+				<a class="btn btn-default" onclick="clearLevel()">Clear</a>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- widget grid -->
+<section id="widget-grid" class="">
+
+	<!-- row -->
+	<div class="row">
+
+		<article class="col-sm-12 col-md-6 col-lg-6">
+
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-darken"
+				data-widget-colorbutton="false" data-widget-editbutton="false">
+				<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i>
+					</span>
+					<h2>Location List</h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget edit box -->
+					<div class="jarviswidget-editbox">
+						<!-- This area used as dropdown edit box -->
+
+					</div>
+
+					<div class="widget-body-toolbar">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
+								<a class="btn btn-default" onclick="addLevel()">Add</a>  
+								<a class="btn btn-default" onclick="editLevel()">Edit</a>
+								<a class="btn btn-danger" onclick="deleteLevel()">Delete</a>
+								<a class="btn btn-primary" onclick="printLevel()">Print</a>
+							</div>
+						</div>
+					</div>
+					<!-- end widget edit box -->
+
+					<!-- widget content -->
+					<div class="widget-body no-padding" id="locationTableContent">
+
+					</div>
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+
+			</div>
+		</article>
+		<article class="col-sm-12 col-md-6 col-lg-6">
+
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-darken"
+				data-widget-colorbutton="false" data-widget-editbutton="false">
+				<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i>
+					</span>
+					<h2>Box List</h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget edit box -->
+					<div class="jarviswidget-editbox">
+						<!-- This area used as dropdown edit box -->
+
+					</div>
+
+					<div class="widget-body-toolbar">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
+								<a class="btn btn-default" onclick="putItemToBox()">Put Item</a> 
+								<a class="btn btn-default" onclick="addWarehouseBox()">Add</a>
+								<a class="btn btn-danger" onclick="deleteWarehouseBox()">Delete</a>
+								<a class="btn btn-primary" onclick="printBox()">Print</a>
+							</div>
+						</div>
+					</div>
+					<!-- end widget edit box -->
+
+					<!-- widget content -->
+					<div class="widget-body no-padding" id="itemBoxTableContent">
+
+					</div>
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+
+			</div>
+		</article>
+
+		<article class="col-sm-12 col-md-12 col-lg-12">
+
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-darken"
+				data-widget-colorbutton="false" data-widget-editbutton="false">
+				<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i>
+					</span>
+					<h2>Item List</h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget edit box -->
+					<div class="jarviswidget-editbox">
+						<!-- This area used as dropdown edit box -->
+
+					</div>
+
+					<div class="widget-body-toolbar">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">								
+								<a class="btn btn-default" onclick="inboundWarehouseItem()"><span class="widget-icon"> <i class="fa fa-plus"></i></span> In</a>
+								<a class="btn btn-default" onclick="outboundWarehouseItem()"><span class="widget-icon"> <i class="fa fa-minus"></i></span> Out</a>
+								<a class="btn btn-default" onclick="addWarehouseItem()">Add</a>  
+								<a class="btn btn-danger" onclick="deleteWarehouseItem()">Delete</a>
+							</div>
+						</div>
+					</div>
+					<!-- end widget edit box -->
+
+					<!-- widget content -->
+					<div class="widget-body no-padding" id="itemTableContent">
+
+					</div>
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+
+			</div>
+		</article>
+	</div>
+	<!-- end row -->
+</section>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="manageWarehouse">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Manage Warehouse</h4>
+			</div>
+			<div class="modal-body">
+				<div id="warehouseTableContent"></div>
+			</div>
+			<div class="modal-footer">
+				<button type='button' class='btn btn-default'
+					onclick="addWarehouse()">Add</button>
+				<button type='button' class='btn btn-default'
+					onclick="editWarehouse()">Edit</button>
+				<button type='button' class='btn btn-danger'
+					onclick="deleteWarehouse()">Delete</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+<div class="modal fade" tabindex="-1" role="dialog"
+	id="manageWarehouseAisle">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Manage Warehouse Aisle</h4>
+			</div>
+			<div class="modal-body">
+				<div id="warehouseAisleTableContent"></div>
+			</div>
+			<div class="modal-footer">
+				<button type='button' class='btn btn-default'
+					onclick="addWarehouseAisle()">Add</button>
+				<button type='button' class='btn btn-default'
+					onclick="editWarehouseAisle()">Edit</button>
+				<button type='button' class='btn btn-danger'
+					onclick="deleteWarehouseAisle()">Delete</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+<div class="modal fade" tabindex="-1" role="dialog"
+	id="manageWarehouseGroup">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Manage Warehouse Group</h4>
+			</div>
+			<div class="modal-body">
+				<div id="warehouseGroupTableContent"></div>
+			</div>
+			<div class="modal-footer">
+				<button type='button' class='btn btn-default'
+					onclick="addWarehouseGroup()">Add</button>
+				<button type='button' class='btn btn-default'
+					onclick="editWarehouseGroup()">Edit</button>
+				<button type='button' class='btn btn-danger'
+					onclick="deleteWarehouseGroup()">Delete</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+<div class="modal fade" tabindex="-1" role="dialog"
+	id="manageWarehouseSubgroup">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Manage Warehouse Subgroup</h4>
+			</div>
+			<div class="modal-body">
+				<div id="warehouseSubgroupTableContent"></div>
+			</div>
+			<div class="modal-footer">
+				<button type='button' class='btn btn-default'
+					onclick="addWarehouseSubgroup()">Add</button>
+				<button type='button' class='btn btn-default'
+					onclick='editWarehouseSubgroup()'>Edit</button>
+				<button type='button' class='btn btn-danger'
+					onclick='deleteWarehouseSubgroup()'>Delete</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="manageItemBoxInput">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Input Item to The Box</h4>
+			</div>
+			<div class="modal-body">
+				<form action="" id="add-item-box" class="smart-form">
+					<fieldset>
+						<section>
+							<label class="input"> <i class="icon-append fa fa-barcode"></i>
+							<input type="text" id="manage-itembox-product-barcode" placeholder="Scan a product barcode or sku" onKeyDown="putItemToBoxEnter(event)"/>
+							</label>								
+						</section>
+					</fieldset>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type='button' class='btn btn-default'
+					onclick="addItemToBox()">Add</button>
+			</div>
+		</div>		
+	</div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="inboundWarehouseItem">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Input Inbound Quantity</h4>
+			</div>
+			<div class="modal-body">
+				<form action="" class="smart-form">
+					<fieldset>
+						<section>
+							<label class="input">
+								<input type="number" id="item-inbound-quantity" placeholder="Quantity"/>
+							</label>
+						</section>
+					</fieldset>
+				</form>
+			</div>			
+			<div class="modal-footer">
+				<button type='button' class='btn btn-default'
+					onclick="inboundItem()">Submit</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="outboundWarehouseItem">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Input Outbound Quantity</h4>
+			</div>
+			<div class="modal-body">
+				<form action="" class="smart-form">
+					<fieldset>
+						<section>
+							<label class="input">
+								<input type="number" id="item-outbound-quantity" placeholder="Quantity"/>
+							</label>
+						</section>
+					</fieldset>
+				</form>
+			</div>			
+			<div class="modal-footer">
+				<button type='button' class='btn btn-default'
+					onclick="outboundItem()">Submit</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="printLocationModal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Select Print and label</h4>
+			</div>
+			<div class="modal-body">
+				<form action="" class="smart-form">
+					<fieldset>
+						<section>
+							<label class="input">
+								<select id="listOfPrinters" class="form-control">
+								</select>
+							</label>
+						</section>
+					</fieldset>
+				</form>
+			</div>			
+			<div class="modal-footer">
+				<button type='button' class='btn btn-default'
+					onclick="doPrintLocation()">Print</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="printBoxModal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Select Print and label</h4>
+			</div>
+			<div class="modal-body">
+				<form action="" class="smart-form">
+					<fieldset>
+						<section>
+							<label class="input">
+								<select id="listOfPrintersForBox" class="form-control">
+								</select>
+							</label>
+						</section>
+					</fieldset>
+				</form>
+			</div>			
+			<div class="modal-footer">
+				<button type='button' class='btn btn-default'
+					onclick="doPrintBox()">Print</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="js/services/warehouse.service.js"></script>
+<script src="js/services/warehouse.aisle.service.js"></script>
+<script src="js/services/warehouse.group.service.js"></script>
+<script src="js/services/warehouse.subgroup.service.js"></script>
+<script src="js/services/warehouse.level.service.js"></script>
+<script src="js/services/warehouse.item.service.js"></script>
+<script src="js/services/warehouse.item.box.service.js"></script>
+<script src="js/controller/warehouse.controller.js"></script>
+<script src="js/controller/warehouse.aisle.controller.js"></script>
+<script src="js/controller/warehouse.group.controller.js"></script>
+<script src="js/controller/warehouse.subgroup.controller.js"></script>
+<script src="js/view/warehouse.view.js"></script>
+<script src="js/view/warehouse.aisle.view.js"></script>
+<script src="js/view/warehouse.group.view.js"></script>
+<script src="js/view/warehouse.subgroup.view.js"></script>
+
+<script src="js/services/printer.service.js"></script>
+<script src="js/services/printer.label.service.js"></script>
+<script type="text/javascript">
+
+//<![CDATA[
+	var warehouseController;
+	var warehouseAisleController;
+	var warehouseGroupController;
+	var warehouseSubgroupController;
+	
+	var warehouseFormController;
+	var warehouseAisleFormController;
+	var warehouseGroupFormController;
+	var warehouseSubgroupFormController;
+	var locationFormController;
+	var warehouseItemFormController;
+	var warehouseItemBoxFormController;
+	
+	var warehouseService = new WarehouseService();
+	var warehouseAisleService = new WarehouseAisleService();
+	var warehouseGroupService = new WarehouseGroupService();
+	var warehouseSubgroupService = new WarehouseSubgroupService();
+	var warehouseLevelService = new WarehouseLevelService();
+	var warehouseItemService = new WarehouseItemService();
+	var warehouseItemBoxService = new WarehouseItemBoxService();
+
+
+	var printerService = new PrinterService();
+	
+	pageSetUp();
+	function putItemToBoxEnter(e) {
+		if(e.which == 13) {
+			addItemToBox();
+		}
+	}
+	function putItemToBox() {
+		if(warehouseItemBoxFormController.getSelectedItems() == null || warehouseItemBoxFormController.getSelectedItems().length == 0) {
+			showMessage("error", "Please select a box to add items");
+		} else if(warehouseItemBoxFormController.getSelectedItems().length > 1) {
+			showMessage("error", "Please select only one box");
+		} else {
+			$("#manageItemBoxInput").modal("show");
+		}
+	}
+	function addItemToBox() {
+		if($("#manage-itembox-product-barcode").val() == null || $("#manage-itembox-product-barcode").val() === "") {
+			showMEssage("error", "Please input a barcode that you want to add");
+		} else {
+			warehouseItemBoxService.addItem(
+					warehouseItemBoxFormController.getSelectedItems()[0].itemBoxId,
+					$("#manage-itembox-product-barcode").val(),
+					function(){
+						warehouseItemBoxFormController.draw();
+						$("#manage-itembox-product-barcode").val('');
+					}
+			);
+		}
+		
+	}
+	/* Warehouse Controller Starts */
+	function addWarehouse() {
+		warehouseFormController.showAddModal();
+	}
+	function deleteWarehouse() {
+		warehouseFormController.showDeleteModal();
+	}
+	function editWarehouse() {
+		warehouseFormController.showEditModal();
+	}
+	/* Warehouse Controller Ends */
+
+	/* Warehouse Aisle Controller Starts */
+
+	function addWarehouseAisle() {
+		warehouseAisleFormController.showAddModal();
+	}
+	function editWarehouseAisle() {
+		warehouseAisleFormController.showEditModal();
+	}
+	function deleteWarehouseAisle() {
+		warehouseAisleFormController.showDeleteModal();
+	}
+
+	/* Warehouse Aisle Controller Ends */
+
+	/* Warehouse Group Controller Starts */
+	function addWarehouseGroup() {
+		warehouseGroupFormController.showAddModal();
+	}
+	function editWarehouseGroup() {
+		warehouseGroupFormController.showEditModal();
+	}
+	function deleteWarehouseGroup() {
+		warehouseGroupFormController.showDeleteModal();
+	}
+	/* Warehouse Group Controller Ends */
+
+	/* Warehouse Subgroup Controller Starts */
+	function addWarehouseSubgroup() {
+		warehouseSubgroupFormController.showAddModal();
+	}
+	function editWarehouseSubgroup() {
+		warehouseSubgroupFormController.showEditModal();
+	}
+	function deleteWarehouseSubgroup() {
+		warehouseSubgroupFormController.showDeleteModal();
+	}
+	/* Warehouse Subgroup Controller Ends */
+	
+	/* Warehouse Item Controller Starts */
+	function inboundWarehouseItem() {
+		if(warehouseItemFormController.getSelectedItems() == null || warehouseItemFormController.getSelectedItems().length == 0) {
+			showMessage('Warning', 'Please select an item');
+		} else {
+			$("#inboundWarehouseItem").modal("show");
+		}
+	}
+	
+	function outboundWarehouseItem() {
+		if(warehouseItemFormController.getSelectedItems() == null || warehouseItemFormController.getSelectedItems().length == 0) {
+			showMessage('Warning', 'Please select an item');
+		} else {
+			$("#outboundWarehouseItem").modal("show");	
+		}	
+	}
+	
+	function addWarehouseItem() {
+		warehouseItemFormController.showAddModal();
+	}
+	
+	function deleteWarehouseItem() {
+		warehouseItemFormController.showDeleteModal();
+	}
+	
+	function inboundItem() {
+		warehouseItemService.inbound(warehouseItemFormController.getSelectedItems()[0], $("#item-inbound-quantity").val(), function(){
+			// Completed
+			
+			$("#inboundWarehouseItem").modal("hide");
+			warehouseItemFormController.reload();
+		});
+	}
+	
+	function outboundItem() {
+		warehouseItemService.outbound(warehouseItemFormController.getSelectedItems()[0], $("#item-outbound-quantity").val(), function(){
+			// Completed
+			warehouseItemFormController.reload();
+			$("#outboundWarehouseItem").modal("hide");
+		});
+	}
+	
+	/* Warehouse Item Controller Ends */
+
+	function showWarehouseManage() {
+		warehouseController.showManagePopup();
+	}
+	function showWarehouseAisleManage() {
+		if (warehouseController.getSelectedValue() == null
+				|| warehouseController.getSelectedValue() == '') {
+			showMessage('Warning', 'Please select a warehouse');
+		} else {
+			warehouseAisleController.showManagePopup();
+		}
+	}
+	function showWarehouseGroupManage() {
+		if (warehouseAisleController.getSelectedValue() == null
+				|| warehouseAisleController.getSelectedValue() == '') {
+			showMessage('Warning', 'Please select an aisle');
+		} else {
+			warehouseGroupController.showManagePopup();
+		}
+	}
+	function showWarehouseSubgroupManage() {
+		if (warehouseGroupController.getSelectedValue() == null
+				|| warehouseGroupController.getSelectedValue() == '') {
+			showMessage('Warning', 'Please select a group');
+		} else {
+			warehouseSubgroupController.showManagePopup();
+		}
+	}
+
+	// Warehouse Level Starts
+	function clearLevel() {
+		warehouseController.emptySelector();
+		warehouseAisleController.emptySelector();
+		warehouseGroupController.emptySelector();
+		warehouseSubgroupController.emptySelector();
+		warehouseController.createSelector();
+		
+		locationFormController.setCustomParamAndValue([],[]);
+		locationFormController.draw();
+		warehouseItemFormController.setCustomParamAndValue([], []);
+		warehouseItemFormController.draw();
+	}
+	function addLevel() {
+		if (warehouseSubgroupController.getSelectedValue() == null
+				|| warehouseSubgroupController.getSelectedValue() == '') {
+			showMessage('Warning', 'Please select a subgroup');
+		} else {
+			locationFormController.showAddModal();
+		}
+	}
+	function editLevel() {
+		locationFormController.showEditModal();
+	}
+	function deleteLevel() {
+		locationFormController.showDeleteModal();
+	}
+	function printLevel() {
+		$("#printLocationModal").modal('show');
+	}
+	function printBox() {
+		$("#printBoxModal").modal('show');
+	}
+	
+	function doPrintLocation() {
+		var printerId = $("#listOfPrinters").val();
+		if(printerId == null || printerId == '') {
+			showMessage('error', 'Please select a printer');
+		} else if(locationFormController.getSelectedItems() == null || locationFormController.getSelectedItems().length == 0) {
+			showMessage('error', 'Please select locations');
+		} else {
+			var items = locationFormController.getSelectedItems();
+			var ids = [];
+			for(var i=0; i<items.length; i++) {
+				var item = items[i];
+				ids.push(item.levelId);
+			}
+			
+			var data = {
+				printerId: printerId,
+				levelIds: ids
+			};
+			
+			printerService.doPrintLocation(data, function(){
+				$("#printLocationModal").modal('hide');
+			});
+		}
+	}
+	
+	function doPrintBox() {
+		var printerId = $("#listOfPrintersForBox").val();
+		if(printerId == null || printerId == '') {
+			showMessage('error', 'Please select a printer');
+		} else if(warehouseItemBoxFormController.getSelectedItems() == null || warehouseItemBoxFormController.getSelectedItems().length == 0) {
+			showMessage('error', 'Please select boxes');
+		} else {
+			var items = warehouseItemBoxFormController.getSelectedItems();
+			var ids = [];
+			for(var i=0; i<items.length; i++) {
+				var item = items[i];
+				ids.push(item.itemBoxId);
+			}
+			
+			var data = {
+				printerId: printerId,
+				boxIds: ids
+			};
+			
+			printerService.doPrintBox(data, function(){
+				$("#printBoxModal").modal('hide');
+			})
+		}
+	}
+
+	// Warehouse Level Ends
+	// Warehouse Box Starts
+	function addWarehouseBox() {
+		warehouseItemBoxFormController.showAddModal();
+	}
+	function deleteWarehouseBox() {
+		warehouseItemBoxFormController.showDeleteModal();
+	}
+	// Warehouse Box Ends
+	
+	// PAGE RELATED SCRIPTS
+	// pagefunction
+	var pagefunction = function() {
+		// get Printer service
+		var printerList = printerService.getListAll();
+		
+		// Create options for printer
+		$("#listOfPrinters").empty();
+		$("#listOfPrintersForBox").empty();
+		
+		$("#listOfPrinters").append($("<option></option>").val("").html("-- Select a printer --"))
+		for(var i=0; i<printerList.length; i++) {
+			var obj = printerList[i];
+			console.log(obj);
+			var opt = $("<option></option>").val(obj.printerId).html(obj.printerName);
+			$("#listOfPrinters").append(opt);
+			opt = $("<option></option>").val(obj.printerId).html(obj.printerName);
+			$("#listOfPrintersForBox").append(opt);
+		}
+		
+		// get Printer label service
+		
+		var responsiveHelper_dt_basic = undefined;
+
+		var breakpointDefinition = {
+			tablet : 1024,
+			phone : 480
+		};
+
+		$("#manageItemBoxInput").on('shown.bs.modal', function(){
+			$("#manage-itembox-product-barcode").focus();
+		});
+		
+
+		warehouseController = new WarehouseController({
+			selectorId : 'warehouse-selector',
+			managePopupId : 'manageWarehouse',
+			service : warehouseService,
+			changeEvent : function(warehouseId) {
+				if (warehouseId != null && warehouseId != '') {
+					warehouseAisleController.createSelector(warehouseId);
+					warehouseGroupController.emptySelector();
+					warehouseSubgroupController.emptySelector();
+					var params = [ 'warehouseId', 'aisleId', 'groupId',
+							'subgroupId' ];
+					var values = [ warehouseId, '', '', '' ];
+					locationFormController.setCustomParamAndValue(params,
+							values);
+					locationFormController.draw();
+
+					var aisleParams = [ 'warehouseId' ];
+					var aisleValues = [ warehouseId ];
+					warehouseAisleFormController.setCustomParamAndValue(aisleParams,
+							aisleValues);
+					warehouseAisleFormController.draw();
+
+				} else {
+					warehouseGroupController.emptySelector();
+					warehouseSubgroupController.emptySelector();
+				}
+			}
+		});
+
+		warehouseAisleController = new WarehouseAisleController({
+			selectorId : 'warehouse-aisle-selector',
+			managePopupId : 'manageWarehouseAisle',
+			service : warehouseAisleService,
+			changeEvent : function(aisleId) {
+				if (aisleId != null && aisleId != '') {
+					var warehouseId = warehouseController.getSelectedValue();
+					warehouseGroupController.createSelector(aisleId);
+					warehouseSubgroupController.emptySelector();
+					var params = [ 'warehouseId', 'aisleId', 'groupId',
+							'subgroupId' ];
+					var values = [ warehouseId, aisleId, '', '' ];
+					locationFormController.setCustomParamAndValue(params,
+							values);
+					locationFormController.draw();
+					
+
+					var aisleParams = [ 'aisleId' ];
+					var aisleValues = [ aisleId ];
+					warehouseGroupFormController.setCustomParamAndValue(params,
+							values);
+					warehouseGroupFormController.draw();
+
+				} else {
+					warehouseGroupController.emptySelector();
+					warehouseSubgroupController.emptySelector();
+				}
+			}
+		});
+
+		warehouseGroupController = new WarehouseGroupController({
+			selectorId : 'warehouse-group-selector',
+			managePopupId : 'manageWarehouseGroup',
+			service : warehouseGroupService,
+			changeEvent : function(groupId) {
+				if (groupId != null && groupId != "") {
+					var warehouseId = warehouseController.getSelectedValue();
+					var aisleId = warehouseAisleController.getSelectedValue();
+					warehouseSubgroupController.createSelector(groupId);
+					var params = [ 'warehouseId', 'aisleId', 'groupId',
+							'subgroupId' ];
+					var values = [ warehouseId, aisleId, groupId, '' ];
+					locationFormController.setCustomParamAndValue(params,
+							values);
+					locationFormController.draw();
+					
+
+					var aisleParams = [ 'groupId' ];
+					var aisleValues = [ groupId ];
+					warehouseSubgroupFormController.setCustomParamAndValue(params,
+							values);
+					warehouseSubgroupFormController.draw();
+				} else {
+					warehouseSubgroupController.emptySelector();
+				}
+			}
+		});
+
+		warehouseSubgroupController = new WarehouseSubgroupController({
+			selectorId : 'warehouse-subgroup-selector',
+			managePopupId : 'manageWarehouseSubgroup',
+			service : warehouseSubgroupService,
+			changeEvent : function(subgroupId) {
+				if (subgroupId != null && subgroupId != "") {
+					var warehouseId = warehouseController.getSelectedValue();
+					var aisleId = warehouseAisleController.getSelectedValue();
+					var groupId = warehouseGroupController.getSelectedValue();
+					var params = [ 'warehouseId', 'aisleId', 'groupId',
+							'subgroupId' ];
+					var values = [ warehouseId, aisleId, groupId, subgroupId ];
+					locationFormController.setCustomParamAndValue(params,
+							values);
+					locationFormController.draw();
+
+				}
+			}
+		});
+
+		warehouseController.createSelector();
+
+		warehouseFormController = new FormController({
+			tableListUrl : "/api/warehouse/",
+			tableId : 'warehouse_table',
+			tableViewId : 'warehouseTableContent',
+			tableHeaders : [ { label : 'ID', name : 'warehouseId' }, 
+			                 { label : 'Tag', name : 'warehouseTag.tag' }, 
+			                 { label : 'Description', name : 'warehouseTag.description'
+			} ],
+			service : warehouseService,
+			addFormShownAction : function() {
+				$("#add-warehouse-tag").focus();
+			},
+			editFormShownAction : function() {
+				$("#edit-warehouse-tag").focus();
+			},
+			forms : {
+				name : 'Warehouse',
+				addElements : [ {
+					fieldset : [ {
+						icon : 'fa-list', type : 'text', label : 'Tag', name : 'add-warehouse-tag', id : 'add-warehouse-tag', placeholder : 'Tag', required : true, editable : true
+					} ]
+				}, {
+					fieldset : [ {
+						icon : 'fa-info', type : 'textarea', label : 'Memo', name : 'add-warehouse-description', id : 'add-warehouse-description', placeholder : 'Memo about this menu', required : false, editable : true
+					} ]
+				} ],
+				editElements : [ {
+					fieldset : [ {
+						icon : 'fa-list', type : 'text', label : 'Tag', name : 'edit-warehouse-tag', id : 'edit-warehouse-tag', placeholder : 'Tag', required : true, editable : true
+					} ]
+				}, {
+					fieldset : [ {
+						icon : 'fa-info', type : 'textarea', label : 'Memo', name : 'edit-warehouse-description', id : 'edit-warehouse-description', placeholder : 'Description', required : false, editable : true
+					} ]
+				} ]
+			},
+			getAddModel : function() {
+				var tag = {
+					tag : $("#add-warehouse-tag").val(),
+					description : $("#add-warehouse-description").val()
+				};
+				console.log(tag);
+				return {
+					warehouseTag : tag
+				};
+			},
+			getEditModel : function(item) {
+				var tag = {
+					tag : $("#edit-warehouse-tag").val(),
+					description : $("#edit-warehouse-description").val()
+				}
+				return {
+					warehouseId : item.warehouseId,
+					warehouseTag : tag
+				};
+			},
+			getDeleteIds : function(items) {
+				var data = [];
+				for(var i=0; i<items.length; i++) {
+					var item = items[i];
+					data.push(item.warehouseId);
+				}
+				return data.join(',');
+			},
+			mapModelToEditForm : function(item) {
+				$("#edit-warehouse-tag").val(item.warehouseTag.tag);
+				$("#edit-warehouse-description").val(item.warehouseTag.description);
+			},
+			dataChangeEvent : function() {
+			}
+		});
+
+		warehouseAisleFormController = new FormController(
+				{
+					type : 'Server',
+					initLoad: false, // only for when type is server
+					tableListUrl : "/api/warehouse/aisle",
+					tableId : 'warehouse_aisle_table',
+					tableViewId : 'warehouseAisleTableContent',
+					tableHeaders : [ { label : 'ID', name : 'aisleId' }, 
+					                 { label : 'Tag', name : 'warehouseTag.tag' }, 
+					                 { label : 'Description', name : 'warehouseTag.description'} ],
+					service : warehouseAisleService,
+					initLoad: false,
+					addFormShownAction : function() {
+						$("#add-aisle-tag").focus();
+					},
+					editFormShownAction : function() {
+						$("#edit-aisle-tag").focus();
+					},
+					forms : {
+						name : 'Warehouse Aisle',
+						addElements : [ {
+							fieldset : [ {
+								icon : 'fa-list', type : 'text', label : 'Tag', name : 'add-aisle-tag', id : 'add-aisle-tag', placeholder : 'Tag', required : true, editable : true
+							} ]
+						}, {
+							fieldset : [ {
+								icon : 'fa-info', type : 'textarea', label : 'Memo', name : 'add-aisle-description', id : 'add-aisle-description', placeholder : 'Memo about this menu', required : false, editable : true
+							} ]
+						} ],
+						editElements : [ {
+							fieldset : [ {
+								icon : 'fa-list', type : 'text', label : 'Tag', name : 'edit-aisle-tag', id : 'edit-aisle-tag', placeholder : 'Tag', required : true, editable : true
+							} ]
+						}, {
+							fieldset : [ {
+								icon : 'fa-info', type : 'textarea', label : 'Memo', name : 'edit-aisle-description', id : 'edit-aisle-description', placeholder : 'Description', required : false, editable : true
+							} ]
+						} ]
+					},
+					getAddModel : function() {
+						var warehouseTag = {
+							tag : $("#add-aisle-tag").val(),
+							description : $("#add-aisle-description").val()
+						};
+						var warehouse = {
+							warehouseId : warehouseController
+									.getSelectedValue()
+						}
+						return {
+							warehouse : warehouse,
+							warehouseTag : warehouseTag
+						};
+					},
+					getEditModel : function(item) {
+						var warehouseTag = {
+							tag : $("#edit-aisle-tag").val(),
+							description : $("#edit-aisle-description").val()
+						};
+
+						var warehouse = {
+							warehouseId : warehouseController
+									.getSelectedValue()
+						};
+
+						return {
+							warehouse : warehouse,
+							warehouseTag : warehouseTag,
+							aisleId : item.aisleId
+						};
+					},
+					getDeleteIds : function(items) {
+						var data = [];
+						for(var i=0; i<items.length; i++) {
+							var item = items[i];
+							data.push(item.aisleId);
+						}
+						return data.join(',');
+					},
+					mapModelToEditForm : function(item) {
+						$("#edit-aisle-tag").val(item.warehouseTag.tag);
+						$("#edit-aisle-description").val(
+								item.warehouseTag.description);
+					},
+					dataChangeEvent : function() {
+					}
+				});
+
+		warehouseGroupFormController = new FormController(
+				{
+					type : 'Server',
+					initLoad: false, // only for when type is server
+					tableListUrl : "/api/warehouse/group",
+					tableId : 'warehouse_group_table',
+					tableViewId : 'warehouseGroupTableContent',
+					tableHeaders : [ {
+						label : 'ID',
+						name : 'groupId'
+					}, {
+						label : 'Tag',
+						name : 'warehouseTag.tag'
+					}, {
+						label : 'Description',
+						name : 'warehouseTag.description'
+					} ],
+					service : warehouseGroupService,
+					addFormShownAction : function() {
+						$("#add-group-tag").focus();
+					},
+					editFormShownAction : function() {
+						$("#edit-group-tag").focus();
+					},
+					forms : {
+						name : 'Warehouse Group',
+						addElements : [ {
+							fieldset : [ {
+								icon : 'fa-list', type : 'text', label : 'Tag', name : 'add-group-tag', id : 'add-group-tag', placeholder : 'Tag', required : true, editable : true
+							} ]
+						}, {
+							fieldset : [ {
+								icon : 'fa-info', type : 'textarea', label : 'Memo', name : 'add-group-description', id : 'add-group-description', placeholder : 'Memo about this menu', required : false, editable : true
+							} ]
+						} ],
+						editElements : [ {
+							fieldset : [ {
+								icon : 'fa-list', type : 'text', label : 'Tag', name : 'edit-group-tag', id : 'edit-group-tag', placeholder : 'Tag', required : true, editable : true
+							} ]
+						}, {
+							fieldset : [ {
+								icon : 'fa-info', type : 'textarea', label : 'Memo', name : 'edit-group-description', id : 'edit-group-description', placeholder : 'Description', required : false, editable : true
+							} ]
+						} ]
+					},
+					getAddModel : function() {
+						var warehouseTag = {
+							tag : $("#add-group-tag").val(),
+							description : $("#add-group-description").val()
+						};
+						var warehouseGroup = {
+							warehouseTag : warehouseTag
+						};
+						console.log(warehouseAisleController.getSelectedValue());
+						var data = {
+							warehouseGroup : warehouseGroup,
+							aisleId : warehouseAisleController.getSelectedValue()
+						};
+						return data;
+					},
+					getEditModel : function(item) {
+						var warehouseTag = {
+							tag : $("#edit-group-tag").val(),
+							description : $("#edit-group-description").val()
+						};
+						var warehouseGroup = {
+							warehouseTag : warehouseTag,
+							groupId : item.groupId
+						};
+						var data = {
+							warehouseGroup : warehouseGroup,
+							aisleId : warehouseAisleController
+									.getSelectedValue()
+						};
+						return data;
+					},
+					getDeleteIds : function(items) {
+						var data = [];
+						for(var i=0; i<items.length; i++) {
+							var item = items[i];
+							data.push(item.groupId);
+						}
+						return data.join(',');
+					},
+					mapModelToEditForm : function(item) {
+						$("#edit-group-tag").val(item.warehouseTag.tag);
+						$("#edit-group-description").val(
+								item.warehouseTag.description);
+					},
+					dataChangeEvent : function() {
+					}
+				});
+
+		warehouseSubgroupFormController = new FormController({
+			type : 'Server',
+			initLoad: false, // only for when type is server
+			tableListUrl : "/api/warehouse/subgroup",
+			tableId : 'warehouse_subgroup_table',
+			tableViewId : 'warehouseSubgroupTableContent',
+			tableHeaders : [ {
+				label : 'ID',
+				name : 'subgroupId'
+			}, {
+				label : 'Tag',
+				name : 'warehouseTag.tag'
+			}, {
+				label : 'Description',
+				name : 'warehouseTag.description'
+			} ],
+			service : warehouseSubgroupService,
+			addFormShownAction : function() {
+				$("#add-subgroup-tag").focus();
+			},
+			editFormShownAction : function() {
+				$("#edit-subgroup-tag").focus();
+			},
+			forms : {
+				name : 'Warehouse Subgroup',
+				addElements : [ {
+					fieldset : [ {
+						icon : 'fa-list', type : 'text', label : 'Tag', name : 'add-subgroup-tag', id : 'add-subgroup-tag', placeholder : 'Tag', required : true, editable : true
+					} ]
+				}, {
+					fieldset : [ {
+						icon : 'fa-info', type : 'textarea', label : 'Memo', name : 'add-subgroup-description', id : 'add-subgroup-description', placeholder : 'Memo about this menu', required : false, editable : true
+					} ]
+				} ],
+				editElements : [ {
+					fieldset : [ {
+						icon : 'fa-list', type : 'text', label : 'Tag', name : 'edit-subgroup-tag', id : 'edit-subgroup-tag', placeholder : 'Tag', required : true, editable : true
+					} ]
+				}, {
+					fieldset : [ {
+						icon : 'fa-info', type : 'textarea', label : 'Memo', name : 'edit-subgroup-description', id : 'edit-subgroup-description', placeholder : 'Description', required : false, editable : true
+					} ]
+				} ]
+			},
+			getAddModel : function() {
+				var warehouseTag = {
+					tag : $("#add-subgroup-tag").val(),
+					description: $("#add-subgroup-description").val()	
+				};
+				var warehouseSubgroup = {
+					warehouseTag: warehouseTag	
+				};
+				return {
+					warehouseSubgroup: warehouseSubgroup,
+					groupId: warehouseGroupController.getSelectedValue()
+				};
+			},
+			getEditModel : function(item) {
+				var warehouseTag = {
+					tag : $("#edit-subgroup-tag").val(),
+					description: $("#edit-subgroup-description").val()	
+				};
+				var warehouseSubgroup = {
+					subgroupId: item.subgroupId,
+					warehouseTag: warehouseTag
+				}
+				return warehouseSubgroup;
+			},
+			getDeleteIds : function(items) {
+				var data = [];
+				for(var i=0; i<items.length; i++) {
+					var item = items[i];
+					data.push(item.subgroupId);
+				}
+				return data.join(',');
+			},
+			mapModelToEditForm : function(item) {
+				$("#edit-subgroup-tag").val(item.warehouseTag.tag);
+				$("#edit-subgroup-description").val(item.warehouseTag.description);
+			},
+			dataChangeEvent : function() {
+			}
+		});
+
+		locationFormController = new FormController({
+			type : 'Server',
+			tableListUrl : "/api/warehouse/level",
+			tableId : 'location_table',
+			tableViewId : "locationTableContent",
+			multiSelection: true,
+			tableHeaders : [ { dataHide : "phone", label : "ID", name : 'levelId' }, 
+			                // { label : 'Section',name : 'warehouseSubgroupTag', orderable : false }, 
+			               //  { label : "Tag", name : 'warehouseTag.tag' }, 
+			                 { label : "Barcode", name : "warehouseCode", orderable : false },
+			                 { label : "Location", name : "locationName", orderable : false }, 
+			                 { dataHide : "phone", label : "Status", name : "levelStatus" },
+			                 { dataHide : "phone", label: "Type", name:"levelType"},
+			                 { dataHide : "phone", label : "# of Items", name : "numberOfItems", orderable : false }, 
+			                 { dataHide : "phone", label : "# of Boxes", name : "numberOfBoxes", orderable : false }, 
+			                 { dataHide : "phone", label : "Reg. Date", name : "regDate", type : "date" } ],
+			service : warehouseLevelService,
+			addFormShownAction : function() {
+				$("#add-level-name").focus();
+			},
+			editFormShownAction : function() {
+				$("#edit-level-name").focus();
+				
+				$("#edit-level-status").val(locationFormController.getSelectedItems()[0].levelStatus);
+				$("#edit-level-type").val(locationFormController.getSelectedItems()[0].levelType);
+			},
+			forms : {
+				name : 'Warehouse Level',
+				addElements : [ {
+					fieldset : [ { icon : 'fa-list', type : 'number', label : 'Number of Level', name : 'add-number-levels', id : 'add-number-levels', placeholder : 'Number of levels you want to add', required : true, editable : true
+					},
+					{ type:'select', label: 'Level Status', id:'add-level-status', data: warehouseLevelService.getLevelStatusListForSelect(), editable: true},
+					{ type:'select', label: 'Level Type', id:'add-level-type', data: warehouseLevelService.getLevelTypeListForSelect(), editable: true}
+					]
+				} ],
+				editElements : [
+					{
+						fieldset : [ 
+						{ type:'select', label: 'Level Status', id:'edit-level-status', data: warehouseLevelService.getLevelStatusListForSelect(), editable: true},
+						{ type:'select', label: 'Level Type', id:'edit-level-type', data: warehouseLevelService.getLevelTypeListForSelect(), editable: true}
+						]
+					}               
+				]
+			},
+			getAddModel : function() {
+				var data = {
+					numberOfLevels: $("#add-number-levels").val(),
+					subgroupId: warehouseSubgroupController.getSelectedValue(),
+					levelType: $("#add-level-type").val(), 
+					levelStatus: $("#add-level-status").val()
+				}
+				return data;
+			},
+			getEditModel : function(item) {
+				return {
+					levelId: locationFormController.getSelectedItems()[0].levelId, 
+					levelType: $("#edit-level-type").val(), 
+					levelStatus: $("#edit-level-status").val()
+				};
+			},
+			getDeleteIds : function(items) {
+				var ids = [];
+				for(var i=0; i<items.length; i++) {
+					var item = items[i];
+					ids.push(item.levelId);
+				}
+				return ids.join(',');
+			},
+			mapModelToEditForm : function(item) {
+				$("#edit-name").val(item.name);
+				$("#edit-description").val(item.description);
+				$("#edit-url").val(item.url);
+				$("#edit-icon").val(item.icon);
+				$("#edit-ordered").val(item.ordered);
+			},
+			dataChangeEvent : function() {
+			},
+
+			rowClick: function(data){
+				var itemParams = ['levelId'];
+				var itemValues = [ data.levelId ];
+				warehouseItemFormController.setCustomParamAndValue(itemParams, itemValues);
+				warehouseItemFormController.draw();
+				
+				warehouseItemBoxFormController.setCustomParamAndValue(itemParams, itemValues);
+				warehouseItemBoxFormController.draw();
+			},
+			rowUnclick: function(data){
+				warehouseItemFormController.setCustomParamAndValue([], []);
+				warehouseItemFormController.draw();
+				
+				warehouseItemBoxFormController.setCustomParamAndValue([], []);
+				warehouseItemBoxFormController.draw();
+			}
+		});
+		
+		warehouseItemFormController = new FormController({
+			// searchable: false,
+			type : 'Server',
+			tableListUrl : "/api/warehouse/item",
+			tableId : 'item_table',
+			tableViewId : "itemTableContent",
+			multiSelection: true,
+			tableHeaders : [ { dataHide : "phone", label : "ID", name : 'itemId' },  
+			                 { type:'Image', label : "Image", name : 'inventory.productImage' },
+			                 { label : "SKU", name : 'inventory.generatedBarcode' },
+			                 { label : "Barcode", name : 'inventory.productBarcode' },
+			                 { dataHide : "phone", label : "Locatioin", name : 'warehouseLevel.warehouseCode' },  
+			                 { label : "Title", name : 'inventory.title', orderable: false }, 
+			                 { label : 'Qty',name : 'quantity', orderable : false },
+			                 { dataHide : "phone", label : 'Stock',name : 'inventory.stock', orderable : false },
+			                 { dataHide : "phone", label : "Status", name : "inventory.statusName" }],
+			service : warehouseItemService,
+			addFormShownAction : function() {
+				if(locationFormController.getSelectedItems() != null && locationFormController.getSelectedItems().length > 0) {
+					$("#add-location-barcode").val(locationFormController.getSelectedItems()[0].warehouseCode);	
+				}
+				$("#add-barcode").focus();
+				
+			},
+			editFormShownAction : function() {},
+			forms : {
+				name : 'Warehouse Item',
+				addElements : [ {
+					fieldset : [ { icon : 'fa-barcode', type : 'text', label : 'SKU or Product Barcode', name : 'add-barcode', id : 'add-barcode', placeholder : 'SKU or Product Barcode', required : true, editable : true
+					}, { icon : 'fa-barcode', type : 'text', label : 'Location Barcode', name : 'add-location-barcode', id : 'add-location-barcode', placeholder : 'Location Barcode', required : true, editable : true
+					}, { type : 'number', label : 'Quantity', name : 'add-quantity', id : 'add-quantity', placeholder : 'Quantity', required : true, editable : true
+					}]
+				} ],
+				editElements : []
+			},
+			getAddModel : function() {
+				var data = {
+					barcode: $("#add-barcode").val(),
+					locationBarcode: $("#add-location-barcode").val(),
+					quantity: $("#add-quantity").val()
+				}
+				return data;
+			},
+			getEditModel : function(item) {
+				return {};
+			},
+			getDeleteIds : function(items) {
+				var ids = [];
+				for(var i=0; i<items.length; i++) {
+					var item = items[i];
+					ids.push(item.itemId);
+				}
+				return ids.join(',');
+			},
+			mapModelToEditForm : function(item) {
+				// It doesn't have edit function
+				/* $("#edit-name").val(item.name);
+				$("#edit-description").val(item.description);
+				$("#edit-url").val(item.url);
+				$("#edit-icon").val(item.icon);
+				$("#edit-ordered").val(item.ordered); */
+			},
+			dataChangeEvent : function() {
+			}
+		});
+		
+		warehouseItemBoxFormController = new FormController({
+			type : 'Server',
+			initLoad: false, // only for when type is server
+			tableListUrl : "/api/warehouse/box",
+			tableId : 'item_box_table',
+			tableViewId : "itemBoxTableContent",
+			multiSelection: true,
+			tableHeaders : [ { dataHide : "phone", label : "ID", name : 'itemBoxId' },  
+			                 { dataHide : "phone", label : "Prefix", name : 'boxPrefix' },  
+			                 { label : "Code", name : 'boxCode' }, 
+			                 { label : '# of Items',name : 'numberOfItems', orderable : false }],
+			service : warehouseItemBoxService,
+			addFormShownAction : function() {
+				$("#add-box-prefix").focus();
+			},
+			editFormShownAction : function() {
+			},
+			forms : {
+				name : 'Warehouse Item Box',
+				addElements : [ {
+						fieldset : [ 
+						             { type : 'text', label : 'Box Prefix', name : 'add-box-prefix', id : 'add-box-prefix', maxlength:'3', placeholder : 'Prefix of Box', required : true, editable : true },
+						             { type : 'number', label : '# of Boxes', name : 'add-number-of-boxes', id : 'add-number-of-boxes', placeholder : 'Number of boxes', required : true, editable : true }
+					]}],
+				editElements : []
+			},
+			addPreCondition: function() {
+				if(locationFormController.getSelectedItems() == null || locationFormController.getSelectedItems().length == 0) {
+					showMessage("error", "Please select a location");
+					return false;
+				}
+				return true;
+			},
+			getAddModel : function() {
+				var data = {
+					levelId: locationFormController.getSelectedItems()[0].levelId,
+					numberOfBoxes: $("#add-number-of-boxes").val(),
+					boxPrefix: $("#add-box-prefix").val()
+				};
+				return data;
+			},
+			getEditModel : function(item) {
+				return {};
+			},
+			getDeleteIds : function(items) {
+				var ids = [];
+				for(var i=0; i<items.length; i++) {
+					var item = items[i];
+					ids.push(item.itemBoxId);
+				}
+				return ids.join(',');
+			},
+			mapModelToEditForm : function(item) {
+				$("#edit-name").val(item.name);
+				$("#edit-description").val(item.description);
+				$("#edit-url").val(item.url);
+				$("#edit-icon").val(item.icon);
+				$("#edit-ordered").val(item.ordered);
+			},
+			dataChangeEvent : function() {
+			},
+			rowClick: function(data) {
+				var itemParams = ['itemBoxId'];
+				var itemValues = [ data.itemBoxId ];
+				warehouseItemFormController.setCustomParamAndValue(itemParams, itemValues);
+				warehouseItemFormController.draw();
+			},
+			rowUnclick: function(data) {
+				warehouseItemFormController.setCustomParamAndValue([], []);
+				warehouseItemFormController.draw();
+			}
+		}); 	
+	};
+	
+	
+
+	// end pagefunction
+
+	// destroy generated instances 
+	// pagedestroy is called automatically before loading a new page
+	// only usable in AJAX version!
+
+	var pagedestroy = function() {
+	}
+
+	// end destroy
+
+	// run pagefunction on load
+
+	loadScript(
+			"js/plugin/datatables/jquery.dataTables.min.js",
+			function() {
+				loadScript(
+						"js/plugin/datatables/dataTables.colVis.min.js",
+						function() {
+							loadScript(
+									"js/plugin/datatables/dataTables.tableTools.min.js",
+									function() {
+										loadScript(
+												"js/plugin/datatables/dataTables.bootstrap.min.js",
+												function() {
+													loadScript(
+															"js/plugin/datatable-responsive/datatables.responsive.min.js",
+															function(){
+															loadScript(
+																"js/plugin/datatable-select/js/dataTables.select.min.js",	
+																pagefunction)
+													});
+												});
+									});
+						});
+			});
+//]]>
+</script>

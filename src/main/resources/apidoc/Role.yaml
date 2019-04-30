@@ -1,0 +1,70 @@
+swagger: 2.0
+info:
+  version: "0.0.1"
+  title: Role API
+basePath: /
+paths:
+  /role:
+    get:
+      description:
+      parameters:
+        - name: pageSize
+          in: query
+          type: number
+          description: size of list
+          required: false
+        - name: page
+          in: query
+          type: integer
+          description: page
+          required: false
+        - name: sortingDirection
+          in: query
+          type: string
+          description: DESC | ASC
+          required: false
+        - name: sortingFields
+          in: query
+          type: string
+          description: sorting fields
+          required: false
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfRole
+            type: array
+            items:
+              $ref: '#/definitions/Role'
+    get:
+      parameters:
+        - name: Role
+          in: body
+          description: The Role JSON you want to post
+          schema:
+            $ref: '#/definitions/Role'
+    post:
+      parameters:
+        - name: Role
+          in: body
+          description: The Role JSON you want to post
+          schema:
+            $ref: '#/definitions/Role'
+    put:
+      parameters:
+        - name: Role
+          in: body
+          description: The Role JSON you want to post
+          schema:
+            $ref: '#/definitions/Role'
+    delete:
+      parameters:
+        - name: Role
+          in: body
+          description: The Role JSON you want to post
+          schema:
+            $ref: '#/definitions/Role'
+definitions:
+  Role:
+    type: object
+    properties:

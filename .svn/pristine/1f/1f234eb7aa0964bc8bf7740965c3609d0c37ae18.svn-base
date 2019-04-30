@@ -1,0 +1,356 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="page-title txt-color-blueDark"><i class="fa fa-lock fa-fw "></i> 
+			Picking Group
+		</h1>
+	</div>
+</div>
+<!-- widget grid -->
+<section id="widget-grid" class="">
+
+	<!-- row -->
+	<div class="row">
+
+		<article class="col-sm-12 col-md-6 col-lg-6">
+
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-darken" data-widget-colorbutton="false" data-widget-editbutton="false">
+				<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+					<h2>Picking Group</h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget edit box -->
+					<div class="jarviswidget-editbox">
+						<!-- This area used as dropdown edit box -->
+						
+					</div>
+					
+					<div class="widget-body-toolbar">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
+								<a class="btn btn-default" id="pickingGroupTableAdd">Add</a>
+								<a class="btn btn-default" id="pickingGroupTableEdit">Edit</a>
+								<a class="btn btn-danger" id="pickingGroupTableDelete">Delete</a>
+							</div>
+						</div>
+					</div>
+					<!-- end widget edit box -->
+
+					<!-- widget content -->
+					<div class="widget-body no-padding" id="pickingGroupTableContent">
+
+					</div>
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+				
+			</div>			
+		</article>
+<!-- NEW WIDGET START -->
+		<article class="col-sm-12 col-md-6 col-lg-6">
+
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-blue"  data-widget-colorbutton="false" data-widget-editbutton="false">
+				<!-- widget options:
+				usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+				data-widget-colorbutton="false"
+				data-widget-editbutton="false"
+				data-widget-togglebutton="false"
+				data-widget-deletebutton="false"
+				data-widget-fullscreenbutton="false"
+				data-widget-custombutton="false"
+				data-widget-collapsed="true"
+				data-widget-sortable="false"
+
+				-->
+				<header>
+					<span class="widget-icon"> <i class="fa fa-sitemap"></i> </span>
+					<h2>Picking Group Tree </h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget content -->
+					<div class="widget-body" id="pickingGroupTree">
+						
+					</div>					
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+
+			</div>
+			<!-- end widget -->
+			
+			
+
+		</article>
+		<!-- WIDGET END -->
+		
+
+	</div>
+	<!-- end row -->
+
+</section>
+
+	
+	
+	
+<div class="modal fade" tabindex="-1" role="dialog" id="addCompanyToTree">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Add Privilege</h4>
+      </div>
+      <div class="modal-body">
+        <form action="" id="add-company-tree" class="smart-form">
+			<fieldset>
+				<section>
+					<label class="select"> <i class="icon-append fa fa-list"></i>
+						<select id="add-tree-select">
+							
+						</select>
+					</label>
+				</section>
+			</fieldset>
+		</form>
+      </div>
+      <div class="modal-footer">
+		<button type='button' class='btn btn-default' data-dismiss='modal'>
+			Cancel
+		</button>
+		<button type='button' class='btn btn-primary' id='addCompanyToTreeButton'>
+			Add
+		</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="deleteCompanyModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Delete Company</h4>
+      </div>
+      <div class="modal-body">
+       Are you sure you want to delete?
+      </div>
+      <div class="modal-footer">
+		<button type='button' class='btn btn-default' data-dismiss='modal'>
+			Cancel
+		</button>
+		<button type='button' class='btn btn-danger' id='deleteCompanyButton'>
+			Delete
+		</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- end widget grid -->
+<script src="js/services/picking_group.service.js"></script>
+<script src="js/services/company.service.js"></script>
+<script src="js/controller/picking_group.tree.controller.js"></script>
+
+<script th:inline="javascript">
+
+/*<![CDATA[*/
+	pageSetUp();
+
+	// PAGE RELATED SCRIPTS
+	// pagefunction
+	
+	var pagefunction = function() {
+		
+		
+		var responsiveHelper_dt_basic = undefined;
+		
+		var breakpointDefinition = {
+			tablet : 1024,
+			phone : 480
+		};
+		/* Get Services */
+		var pickingGroupService = new PickingGroupService();
+		var companyList = JSON.parse(/*[[${companyListJson}]]*/);
+		// make the company list as hashtable
+		var companyTable = {};
+		for(var i in companyList) {
+			var company = companyList[i];
+			companyTable[company.code] = company;
+		}
+		
+		/* End get services */
+		var pickingGroupTreeController = new PickingGroupTreeController({
+			pickingGroupService: pickingGroupService,
+			companyListTable: companyTable,
+			modals: ['addCompanyToTree', 'deleteCompanyFromTree'],
+			forms: 'add-company-tree',
+			companyListId: 'add-tree-select',
+			addButtonForm: 'addCompanyToTreeButton',
+			reloadEvent: function() {
+				reloadTreeLib();
+			}
+		});
+		pickingGroupTreeController.createTree('pickingGroupTree');
+		
+		var pickingGroupFormController = new FormController({
+			tableListUrl: "/api/picking/group",
+			tableId: 'picking_group_table',
+			tableHeaders: [{
+				dataClass: 'expand',
+				label: "ID",
+				name: 'pickingGroupId'
+			}, {
+				dataClass: 'expand',
+				label: 'Name',
+				name: 'name'
+			}, {
+				dataClass: 'expand',
+				label: 'Product Type',
+				name: 'productType'
+			}, {
+				dataClass: 'expand',
+				label: 'Filter Order',
+				name: 'filterOrder'
+				}
+			],
+			tableViewId: "pickingGroupTableContent",
+			forms: {
+				name: 'pickingGroup',
+				addElements: [
+					{
+						fieldset: [
+								{ type:'text', label: 'Group Name', name:'add-name', id:'add-name', placeholder:'Name of Group', required: true, editable: true },
+								{ type:'select', label: 'Product Type', name:'add-product-type', id:'add-product-type', required:true, editable:true, data: [{key: 'HAIR', value: 'Hair'},{key:'GM', value:'GM'}]},
+								{ type:'number', label: 'Filter Order', name:'add-filter-order', id:'add-filter-order', required:true, editable:true },
+								{ type:'textarea', label: 'Description', name:'add-description', id:'add-description', placeholder:'Description', required: true, editable: true }    		           
+						]
+					}   
+				],
+				editElements: [
+					{
+						fieldset: [
+									{ type:'text', label: 'Group Name', name:'edit-name', id:'edit-name', placeholder:'Name of Group', required: true, editable: true },
+									{ type:'select', label: 'Product Type', name:'edit-product-type', id:'edit-product-type', required:true, editable:true, data: [{key: 'HAIR', value: 'Hair'},{key:'GM', value:'GM'}]},
+									{ type:'number', label: 'Filter Order', name:'edit-filter-order', id:'edit-filter-order', required:true, editable:true },
+									{ type:'textarea', label: 'Description', name:'edit-description', id:'edit-description', placeholder:'Description', required: true, editable: true }
+							]
+					}				               
+				]
+			},
+			service: pickingGroupService,
+			addFormShownAction: function() {
+				$("#add-name").focus();
+			},
+			editFormShownAction: function() {
+				$("#edit-name").focus();
+			},
+			getAddModel: function() {
+				var obj = {
+						name: $("#add-name").val(),
+						description: $("#add-description").val(),
+						productType: $("#add-product-type").val(),
+						filterOrder: $("#add-filter-order").val()	
+				};
+				return obj;
+			},
+			getEditModel: function(item) {
+				var obj = {
+					pickingGroupId: item.pickingGroupId,
+					name: $("#edit-name").val(),
+					description: $("#edit-description").val(),
+					productType: $("#edit-product-type").val(),
+					filterOrder: $("#edit-filter-order").val()
+				};
+				console.log(obj);
+				return obj;
+			},
+			getDeleteIds: function(items) {
+				var ids = [];
+				for(var i=0; i<items.length; i++) {
+					ids.push(items[i].pickingGroupId);
+				}
+				return ids.join(',');
+			},
+			mapModelToEditForm: function(item) {
+				$("#edit-name").val(item.name);	
+				$("#edit-description").val(item.description);
+				$("#edit-product-type").val(item.productType);
+				$("#edit-filter-order").val(item.filterOrder);
+			},
+			dataChangeEvent: function() {
+				pickingGroupTreeController.reload();
+			}
+		});
+		
+		
+		$("#pickingGroupTableAdd").click(function(e) {
+			pickingGroupFormController.showAddModal();
+		});
+
+		$("#pickingGroupTableEdit").click(function(e) {
+			pickingGroupFormController.showEditModal();
+		});
+
+		$("#pickingGroupTableDelete").click(function(e) {
+			pickingGroupFormController.showDeleteModal();
+		});
+		
+		reloadTreeLib();
+		
+	};
+	
+	
+	// end pagefunction
+	
+	// destroy generated instances 
+	// pagedestroy is called automatically before loading a new page
+	// only usable in AJAX version!
+
+	var pagedestroy = function(){
+		
+		/*
+		Example below:
+
+		$("#calednar").fullCalendar( 'destroy' );
+		if (debugState){
+			root.console.log("✔ Calendar destroyed");
+		} 
+
+		For common instances, such as Jarviswidgets, Google maps, and Datatables, are automatically destroyed through the app.js loadURL mechanic
+
+		*/
+
+
+	}
+
+	// end destroy
+
+	// run pagefunction on load
+
+	loadScript("js/plugin/datatables/jquery.dataTables.min.js", function(){
+		loadScript("js/plugin/datatables/dataTables.colVis.min.js", function(){
+			loadScript("js/plugin/datatables/dataTables.tableTools.min.js", function(){
+				loadScript("js/plugin/datatables/dataTables.bootstrap.min.js", function(){
+					loadScript("js/plugin/datatable-responsive/datatables.responsive.min.js", function(){
+						loadScript("js/plugin/datatable-select/js/dataTables.select.min.js",pagefunction)
+					});
+				});
+			});
+		});
+	});
+	/*]]>*/
+</script>

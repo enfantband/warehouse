@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"  xmlns:layout="http://www.thymeleaf.org">	
+	<head layout:include="common/layout :: header">			
+		<title>Login</title>
+	</head>
+	<style>
+	td {
+		border:1px solid silver;
+	}
+	</style>
+	<body class="">
+
+	<section id="widget-grid" class="" style="margin:10px">
+			<div>
+				<h1>Picking Performance Report</h1>
+			</div>
+			<div>
+				<h4 id="pickerName"></h4>
+				<h4 id="reportDate"></h4>
+			</div>
+		<!-- row -->
+			<div class="row">
+			
+				<canvas id="barChart" height="120"></canvas>
+				
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<!-- <table style="width:100%; border:1px solid silver">
+					<tr style="border:1px solid silver">
+						<td width="10%">&nbsp;</td>
+						<td style="text-align:center" width="45%"><h4><b>Picking</b></h4></td>
+						<td style="text-align:center" width="45%"><h4><b>Average</b></h4></td> 
+					</tr>
+					<tr>
+						<td style="padding-left:10px"><h4>January</h4></td>
+						<td style="text-align:center"><h4>100</h4></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td style="padding-left:10px"><h4>February</h4></td>
+						<td style="text-align:center"><h4>98</h4></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td style="padding-left:10px"><h4>March</h4></td>
+						<td style="text-align:center"><h4>120</h4></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td style="padding-left:10px"><h4>April</h4></td>
+						<td style="text-align:center"><h4>130</h4></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td style="padding-left:10px"><h4>May</h4></td>
+						<td style="text-align:center"><h4>72</h4></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td style="padding-left:10px"><h4>June</h4></td>
+						<td style="text-align:center"><h4>98</h4></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td style="padding-left:10px"><h4>July</h4></td>
+						<td style="text-align:center"><h4>77</h4></td>
+						<td></td>
+					</tr>
+					</table> -->
+				</div>
+			</div>
+		
+			<!-- end row -->
+		
+			<!-- row -->
+		
+			<div class="row">
+		
+				<!-- a blank row to get started -->
+				<div class="col-sm-12">
+					<!-- your contents here -->
+				</div>
+					
+			</div>
+		</section>
+			<!-- end row -->
+		
+		<!-- #PLUGINS -->
+		<!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+		<!-- IMPORTANT: APP CONFIG -->
+		<script src="js/app.config.seed.js"></script>
+		<!-- BOOTSTRAP JS -->
+		<script src="js/bootstrap/bootstrap.min.js"></script>
+		<script src="js/services/performance.report.service.js"></script>
+		
+		<script src="js/util.js"></script>
+		<script src="js/formGenerator/form.generator.js"></script>
+		<script src="js/formGenerator/form.util.js"></script>
+		<!-- MAIN APP JS FILE -->
+		<script src="js/app.seed.js"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			
+			pageSetUp();
+			
+			/*
+			 * ALL PAGE RELATED SCRIPTS CAN GO BELOW HERE
+			 * eg alert("my home function");
+			 * 
+			 * var pagefunction = function() {
+			 *   ...
+			 * }
+			 * loadScript("js/plugin/_PLUGIN_NAME_.js", pagefunction);
+			 * 
+			 * TO LOAD A SCRIPT:
+			 * var pagefunction = function (){ 
+			 *  loadScript(".../plugin.js", run_after_loaded);	
+			 * }
+			 * 
+			 * OR you can load chain scripts by doing
+			 * 
+			 * loadScript(".../plugin.js", function(){
+			 * 	 loadScript("../plugin.js", function(){
+			 * 	   ...
+			 *   })
+			 * });
+			 */
+			
+			 var  LineConfig, barChartData, RadarConfig, DoughtnutConfig, PolarConfig, PieConfig;
+		
+			// pagefunction
+		
+			var pagefunction = function() {
+				// clears the variable if left blank
+				
+					
+		
+					// reference: http://www.chartjs.org/docs/
+						
+		
+					var employeeId = /*[[${employeeId}]]*/'';
+					var reportDate = /*[[${reportDate}]]*/'';
+					var performanceReportService = new PerformanceReportService();
+					var data = performanceReportService.getIndividualReport(employeeId, reportDate, function(data){
+					$("#reportDate").html(reportDate);
+						$("#pickerName").html(data.pickerName);
+						barChartData = {
+						          labels: ["Picked", "Picked/No Barcode", "Missed", "Wrong Location"],
+						          datasets: [{
+						              label: data.pickerName,
+						              backgroundColor: "rgba(71,192,74,0.5)",
+						              data: [data.totalPickedUnique, data.totalPickedWithoutScanUnique, data.totalMissedUnique, data.totalWrongLocationUnique]
+						          }, {
+						              label: 'Average',
+						              backgroundColor: "rgba(247,70,74,0.5)",
+						              data: [data.avgTotalPickedUnique, data.avgTotalPickedWithoutScanUnique, data.avgTotalMissedUnique, data.avgTotalWrongLocationUnique]
+						          }]
+						
+						      };
+						
+						
+						
+						
+						         myBar = new Chart(document.getElementById("barChart"), {
+						             type: 'bar',
+						             data: barChartData,
+						             options: {
+						                 responsive: true,
+						                 title: {
+						                 	display: true,
+						                 	text: 'Picking Performance'
+						                 }
+						             }
+						         });
+					});
+		
+		
+				      
+		    			//myPie = new Chart(document.getElementById("pieChart"), PieConfig);
+				    
+		
+			};
+			
+			loadScript("js/plugin/moment/moment.min.js", function(){
+				loadScript("js/plugin/chartjs/chart.min.js", pagefunction)}); 
+		
+			// end pagefunction
+		
+			// destroy generated instances 
+			// pagedestroy is called automatically before loading a new page
+			// only usable in AJAX version!
+		
+			var pagedestroy = function(){
+				
+				//destroy all charts
+		
+		    	myBar.destroy();
+		    	barChartData=null;
+		
+		    	myPie.destroy();
+		    	PieConfig=null;
+		
+		    	if (debugState){
+					root.console.log("✔ Chart.js charts destroyed");
+				} 
+			}
+		
+			// end destroy
+			
+		/*]]>*/
+		</script>
+	</body>
+	
+</html>

@@ -1,0 +1,70 @@
+swagger: 2.0
+info:
+  version: "0.0.1"
+  title: PickingItem API
+basePath: /picking
+paths:
+  /item:
+    get:
+      description:
+      parameters:
+        - name: pageSize
+          in: query
+          type: number
+          description: size of list
+          required: false
+        - name: page
+          in: query
+          type: integer
+          description: page
+          required: false
+        - name: sortingDirection
+          in: query
+          type: string
+          description: DESC | ASC
+          required: false
+        - name: sortingFields
+          in: query
+          type: string
+          description: sorting fields
+          required: false
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfPickingItem
+            type: array
+            items:
+              $ref: '#/definitions/PickingItem'
+    get:
+      parameters:
+        - name: PickingItem
+          in: body
+          description: The PickingItem JSON you want to post
+          schema:
+            $ref: '#/definitions/PickingItem'
+    post:
+      parameters:
+        - name: PickingItem
+          in: body
+          description: The PickingItem JSON you want to post
+          schema:
+            $ref: '#/definitions/PickingItem'
+    put:
+      parameters:
+        - name: PickingItem
+          in: body
+          description: The PickingItem JSON you want to post
+          schema:
+            $ref: '#/definitions/PickingItem'
+    delete:
+      parameters:
+        - name: PickingItem
+          in: body
+          description: The PickingItem JSON you want to post
+          schema:
+            $ref: '#/definitions/PickingItem'
+definitions:
+  PickingItem:
+    type: object
+    properties:

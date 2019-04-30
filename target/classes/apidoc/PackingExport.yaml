@@ -1,0 +1,70 @@
+swagger: 2.0
+info:
+  version: "0.0.1"
+  title: PackingExport API
+basePath: /packing
+paths:
+  /export:
+    get:
+      description:
+      parameters:
+        - name: pageSize
+          in: query
+          type: number
+          description: size of list
+          required: false
+        - name: page
+          in: query
+          type: integer
+          description: page
+          required: false
+        - name: sortingDirection
+          in: query
+          type: string
+          description: DESC | ASC
+          required: false
+        - name: sortingFields
+          in: query
+          type: string
+          description: sorting fields
+          required: false
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfPackingExport
+            type: array
+            items:
+              $ref: '#/definitions/PackingExport'
+    get:
+      parameters:
+        - name: PackingExport
+          in: body
+          description: The PackingExport JSON you want to post
+          schema:
+            $ref: '#/definitions/PackingExport'
+    post:
+      parameters:
+        - name: PackingExport
+          in: body
+          description: The PackingExport JSON you want to post
+          schema:
+            $ref: '#/definitions/PackingExport'
+    put:
+      parameters:
+        - name: PackingExport
+          in: body
+          description: The PackingExport JSON you want to post
+          schema:
+            $ref: '#/definitions/PackingExport'
+    delete:
+      parameters:
+        - name: PackingExport
+          in: body
+          description: The PackingExport JSON you want to post
+          schema:
+            $ref: '#/definitions/PackingExport'
+definitions:
+  PackingExport:
+    type: object
+    properties:

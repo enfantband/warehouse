@@ -1,0 +1,272 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="page-title txt-color-blueDark">
+			<i class="fa fa-bar-chart fa-fw "></i> 
+				Performance Report 
+		</h1>
+	</div>
+</div>
+
+<!-- widget grid -->
+<section id="widget-grid" class="">
+
+	<!-- row -->
+	<div class="row">
+
+		<!-- NEW WIDGET START -->
+		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
+				<header>
+					<span class="widget-icon"> <i class="fa fa-bar-chart"></i> </span>
+					<h2>Performance Report</h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget edit box -->
+					<div class="jarviswidget-editbox">
+						<!-- This area used as dropdown edit box -->
+						
+					</div>
+					
+					<div class="widget-body">
+						<div class="form-group">
+							<div class="row">
+								<div class="col-md-2">
+									<select name="month" id="searchMonth" class="form-control">
+										<option value="0" selected="" disabled="">Month</option>
+										<option value="1">January</option>
+										<option value="1">February</option>
+										<option value="3">March</option>
+										<option value="4">April</option>
+										<option value="5">May</option>
+										<option value="6">June</option>
+										<option value="7">July</option>
+										<option value="8">August</option>
+										<option value="9">September</option>
+										<option value="10">October</option>
+										<option value="11">November</option>
+										<option value="12">December</option>
+									</select>
+								</div>
+								<div class="col-md-2">
+									<input type="text" class="form-control" id="searchYear" name="year" placeholder="Year" data-mask="2099" />
+								</div>
+								<div>
+									<button class="btn btn-default" id="searchBt">Search</button>
+								</div>
+							</div>
+						</div>	
+						
+					</div>
+					<!-- end widget edit box -->
+
+					<!-- widget content -->
+					<div class="widget-body no-padding" id="performanceReportContent">
+
+					</div>
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+				
+			</div>
+			<!-- end widget -->
+
+		</article>
+		<!-- WIDGET END -->
+
+	</div>
+
+	<!-- end row -->
+
+	<!-- end row -->
+
+</section>
+<!-- end widget grid -->
+<script src="js/services/performance.report.service.js"></script>
+<script type="text/javascript">
+
+//<![CDATA[
+	pageSetUp();
+	
+	// PAGE RELATED SCRIPTS
+	
+	
+	// pagefunction	
+	var pagefunction = function() {
+		
+		var responsiveHelper_dt_basic = undefined;
+		
+		var breakpointDefinition = {
+			tablet : 1024,
+			phone : 480
+		};
+
+		var performanceReportService = new PerformanceReportService();
+		
+		/* End get services */
+		//date setting
+		
+		var performanceFormController = new FormController({
+			searchable: false,
+			type : 'Server',
+			tableListUrl: "/api/pickingJobTimelineReport",
+			tableId: 'performance_report_table',
+			tableViewId: "performanceReportContent",
+			tableHeaders: [
+			        	{
+			        		dataClass: "expand",
+			        		icon: "fa-user",
+			        		label: "Picker",
+			        		name: "warehouseEmployee.name"
+			        	},
+			        	{
+			        		dataClass: "expand",
+			        		label: "Picked",
+							name: 'totalPicked'
+			        	},
+			        	{
+			        		dataHide: "phone",
+			        		label: "U Picked",
+			        		name: "totalPickedUnique"
+			        	},
+			        	{
+			        		dataHide: "phone",
+			        		label: "Picked W/T SCAN",
+			        		name: "totalPickedWithoutScan"
+			        	},
+			        	{
+			        		dataHide: "phone",
+			        		label: "U Picked W/T SCAN",
+			        		name: "totalPickedWithoutScanUnique"
+			        	},
+			        	{
+			        		dataHide: "phone",
+			        		label: "Wrong Location",
+			        		name: "totalWrongLocation"
+			        	},
+			        	{
+			        		dataHide: "phone",
+			        		label: "U Wrong Location",
+			        		name: "totalWrongLocationUnique"
+			        	},
+			        	{
+			        		dataHide: "phone",
+			        		label: "U Picked W/T SCAN",
+			        		name: "totalPickedWithoutScanUnique"
+			        	},
+			        	{
+			        		dataHide: "phone",
+			        		label: "Missed",
+			        		name: "totalMissed"
+			        	},
+			        	{
+			        		dataHide: "phone",
+			        		label: " U Missed",
+			        		name: "totalMissedUnique"
+			        	},
+			        	{
+			        		dataHide: "phone",
+			        		label: "Start Date",
+			        		name: "startTimeline.eventTime",
+			        		type: "date",
+			        		dateFormat: 'month|year'
+			        	},
+			        	{
+			        		dataHide: "phone",
+			        		label: "Report",
+			        		icon: "fa-bar-chart",
+			        		type: "button",
+			        		value: "",
+			        		buttonClass: "btn btn-default",
+			        		buttonIcon: "fa-bar-chart",
+			        		eventId: "showReportEvent"
+			        	}
+			               ],
+			buttonEvents: {
+				"showReportEvent" : function(data) {
+					// implement showing report part
+					var searchMonth = "";
+					if($("#searchMonth").val() < 10) {
+						searchMonth = "0";
+					}
+					searchMonth = searchMonth + $("#searchMonth").val();
+					var searchDate = searchMonth + "/" + $("#searchYear").val();
+					var url = "/performanceReport?employeeId=" + data.warehouseEmployee.warehouseEmployeeId + "&reportDate=" + searchDate;
+					// Get monthly data 
+					window.open(url, "_blank");
+				}
+			},
+			service: performanceReportService,
+			addFormShownAction: function() {
+				
+			},
+			editFormShownAction: function() {
+				
+			},
+			forms: {
+				name: 'menu',
+				addElements: [],
+				editElements: []
+			},
+			getAddModel: function() {
+				return {};
+			},
+			getEditModel: function(item) {
+				return {};
+			},
+			getDeleteIds: function(items) {
+			},
+			mapModelToEditForm: function(item) {
+					
+			},
+			dataChangeEvent: function() {
+			}
+		});
+
+		var today = new Date();
+		$("#searchYear").val(today.getFullYear());
+		
+		$("#searchBt").click(function(e) {
+			var itemParams = ['reportDate'];
+			var year = $("#searchYear").val();
+			if($("#searchMonth").val() == 0 || $("#searchMonth").val() == null) {
+				showMessage("error", "Please select the month");
+			} else {
+				var searchMonth = "";
+				if($("#searchMonth").val() < 10) {
+					searchMonth = "0";
+				}
+				searchMonth = searchMonth + $("#searchMonth").val();
+				var searchDate = searchMonth + "/" + $("#searchYear").val();
+
+				var itemValues = [ searchDate ];
+				performanceFormController.setCustomParamAndValue(itemParams, itemValues);
+				performanceFormController.draw();
+			}	
+		});
+		
+	};
+	
+
+	// load related plugins
+	
+	loadScript("js/plugin/datatables/jquery.dataTables.min.js", function(){
+		loadScript("js/plugin/datatables/dataTables.colVis.min.js", function(){
+			loadScript("js/plugin/datatables/dataTables.tableTools.min.js", function(){
+				loadScript("js/plugin/datatables/dataTables.bootstrap.min.js", function(){
+					loadScript("js/plugin/datatable-responsive/datatables.responsive.min.js", function(){
+						loadScript("js/plugin/datatable-select/js/dataTables.select.min.js",pagefunction);
+					});
+				});
+			});
+		});
+	});
+//]]>	
+
+</script>

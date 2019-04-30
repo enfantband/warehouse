@@ -1,0 +1,70 @@
+swagger: 2.0
+info:
+  version: "0.0.1"
+  title: PickingGroupCompany API
+basePath: /picking
+paths:
+  /group:
+    get:
+      description:
+      parameters:
+        - name: pageSize
+          in: query
+          type: number
+          description: size of list
+          required: false
+        - name: page
+          in: query
+          type: integer
+          description: page
+          required: false
+        - name: sortingDirection
+          in: query
+          type: string
+          description: DESC | ASC
+          required: false
+        - name: sortingFields
+          in: query
+          type: string
+          description: sorting fields
+          required: false
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfPickingGroupCompany
+            type: array
+            items:
+              $ref: '#/definitions/PickingGroupCompany'
+    get:
+      parameters:
+        - name: PickingGroupCompany
+          in: body
+          description: The PickingGroupCompany JSON you want to post
+          schema:
+            $ref: '#/definitions/PickingGroupCompany'
+    post:
+      parameters:
+        - name: PickingGroupCompany
+          in: body
+          description: The PickingGroupCompany JSON you want to post
+          schema:
+            $ref: '#/definitions/PickingGroupCompany'
+    put:
+      parameters:
+        - name: PickingGroupCompany
+          in: body
+          description: The PickingGroupCompany JSON you want to post
+          schema:
+            $ref: '#/definitions/PickingGroupCompany'
+    delete:
+      parameters:
+        - name: PickingGroupCompany
+          in: body
+          description: The PickingGroupCompany JSON you want to post
+          schema:
+            $ref: '#/definitions/PickingGroupCompany'
+definitions:
+  PickingGroupCompany:
+    type: object
+    properties:

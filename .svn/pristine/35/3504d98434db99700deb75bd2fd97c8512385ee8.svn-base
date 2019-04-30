@@ -1,0 +1,173 @@
+package com.samsbeauty.warehouse.controllers;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.samsbeauty.old.model.Inventory;
+import com.samsbeauty.warehouse.employee.model.WarehouseEmployee;
+import com.samsbeauty.warehouse.employee.service.WarehouseEmployeeService;
+import com.samsbeauty.warehouse.exception.rest.InvalidProductBarcodeException;
+import com.samsbeauty.warehouse.exception.rest.WrongParameterException;
+import com.samsbeauty.warehouse.model.WarehouseItem;
+import com.samsbeauty.warehouse.model.WarehouseItemBox;
+import com.samsbeauty.warehouse.model.WarehouseLevel;
+import com.samsbeauty.warehouse.old.helper.InventoryRestHelper;
+import com.samsbeauty.warehouse.service.WarehouseItemBoxService;
+import com.samsbeauty.warehouse.service.WarehouseItemService;
+import com.samsbeauty.warehouse.service.WarehouseLevelService;
+import com.samsbeauty.warehouse.util.LocationUtil;
+
+@RestController
+@RequestMapping("/api/warehouse/box")
+public class WarehouseItemBoxController {
+
+	@Autowired private WarehouseItemBoxService warehouseItemBoxService;	
+	@Autowired private WarehouseItemService warehouseItemService;	
+	@Autowired private WarehouseLevelService warehouseLevelService;
+	@Autowired private WarehouseEmployeeService warehouseEmployeeService;
+	
+
+	@Autowired
+	private InventoryRestHelper inventoryRestHelper;
+
+	@Value("${page.default.num}")
+	protected Integer DEFAULT_NUM_PER_PAGE;
+
+	// Retrieve All Resources
+	@RequestMapping(method=RequestMethod.GET)
+	ResponseEntity<Page<WarehouseItemBox>> getAll(
+					@RequestParam(name="pageSize", required=false) Integer pageSize,
+					@RequestParam(name="page", required=false) Integer page,
+					@RequestParam(name="sortingDirections", required=false) String sortingDirection,
+					@RequestParam(name="sortingFields", required=false) String sortingField,
+					@RequestParam(name="levelId", required=false) Long levelId) throws WrongParameterException {
+				if(pageSize == null){
+			pageSize = DEFAULT_NUM_PER_PAGE;
+		}
+		if(page == null) {
+			page = 1;
+		}
+		Sort sort = null;
+		if(sortingDirection != null && sortingField != null) {
+			String[] directions = sortingDirection.split(" ");
+			String[] sortingFields = sortingField.split(" ");
+			if(directions.length > 0) {
+				if(directions.length != sortingFields.length) {
+					throw new WrongParameterException("Number of sorting field and direction are different.");
+				}
+				sort = new Sort(Sort.Direction.fromString(directions[0]), sortingFields[0]);
+				if(directions.length > 1) {
+					for(int i=1; i<directions.length; i++) {
+						sort = sort.and(new Sort(Sort.Direction.fromString(directions[i]), sortingFields[i]));
+					}
+				}
+			}
+		} else {
+			sort = new Sort(Sort.Direction.DESC, "itemBoxId");
+		}
+		Page<WarehouseItemBox> warehouseItemBoxList = null;
+		if(levelId != null) {
+			warehouseItemBoxList = warehouseItemBoxService.getAllByLevelId(levelId, page, pageSize, sort);
+		} else {
+			warehouseItemBoxList = warehouseItemBoxService.getAll(page, pageSize, sort);
+		}
+		 
+		return new ResponseEntity<Page<WarehouseItemBox>>(warehouseItemBoxList, HttpStatus.OK);
+	}
+	
+	@RequestMapping(method=RequestMethod.POST, value="/level/{levelId}")
+	ResponseEntity<List<WarehouseItemBox>> add(@PathVariable Long levelId, @RequestParam(name="boxPrefix") @Valid final String boxPrefix, @RequestParam(name="numberOfBoxes") @Valid final Integer numberOfBoxes) {
+		WarehouseLevel warehouseLevel = warehouseLevelService.getOne(levelId);
+		Integer maxCode = warehouseItemBoxService.getMaxCode(boxPrefix);
+		List<WarehouseItemBox> addedBoxes = new ArrayList<>();
+		for(int i=0; i<numberOfBoxes; i++) {
+
+			WarehouseItemBox newWarehouseItemBox = WarehouseItemBox.builder(warehouseLevel)
+					.setBoxCode(LocationUtil.getIncreaseCode(maxCode, 6))
+					.setBoxPrefix(boxPrefix)
+					.setModBy(null)
+					.setModDate(new Date())
+					.setRegBy(null)
+					.setRegDate(new Date())
+					.createWarehouseItemBox();
+			
+					
+			maxCode++;
+			warehouseItemBoxService.save(newWarehouseItemBox);
+			addedBoxes.add(newWarehouseItemBox);
+		}
+		
+		return new ResponseEntity<List<WarehouseItemBox>>(addedBoxes, HttpStatus.OK);
+	}
+
+	@RequestMapping(method=RequestMethod.DELETE, value="/{itemBoxId}")
+	WarehouseItemBox delete(@PathVariable Integer itemBoxId) {
+		WarehouseItemBox deleteWarehouseItemBox = warehouseItemBoxService.getOne(itemBoxId);
+		deleteWarehouseItemBox.deactivate();
+		return  warehouseItemBoxService.save(deleteWarehouseItemBox);
+	}
+	
+	@RequestMapping(method=RequestMethod.DELETE, value="/ids/{itemBoxIds}")
+	ResponseEntity<List<WarehouseItemBox>> deleteByIds(@PathVariable String itemBoxIds) {
+		List<String> ids = Arrays.asList(itemBoxIds.split(","));
+		List<WarehouseItemBox> deletedList = new ArrayList<>();
+		for(String id : ids) {
+			Integer itemBoxId = Integer.valueOf(id);
+			WarehouseItemBox deletedWarehouseItemBox = warehouseItemBoxService.getOne(itemBoxId);
+			deletedList.add(deletedWarehouseItemBox);
+			deletedWarehouseItemBox.deactivate();
+			warehouseItemBoxService.save(deletedWarehouseItemBox);
+		}
+		
+		return new ResponseEntity<List<WarehouseItemBox>> (deletedList, HttpStatus.OK);
+	}
+	
+	@RequestMapping(method=RequestMethod.POST, value="/{itemBoxId}/item/productBarcode/{barcode}")
+	WarehouseItem addItem(@PathVariable Integer itemBoxId, @PathVariable String barcode, HttpServletRequest request) throws InvalidProductBarcodeException {
+
+		WarehouseItemBox box = warehouseItemBoxService.getOne(itemBoxId);
+		WarehouseItem item = null;
+		// Get Inventory data first
+		List<Inventory> inventoryList = inventoryRestHelper.getInventoryList(Arrays.asList(barcode));
+		if(inventoryList.size() > 0) {
+
+			String gid = (String) request.getAttribute("GID");
+			WarehouseEmployee regBy = warehouseEmployeeService.getOneByGid(gid);
+			
+			item = WarehouseItem.builder()
+					.setQuantity(1)
+					.setGeneratedBarcode(inventoryList.get(0).getGeneratedBarcode())
+					.setProductId(Long.valueOf(inventoryList.get(0).getProductId()))
+					.setRegBy(regBy)
+					.setModBy(regBy)					
+					.setModDate(new Date())
+					.setRegDate(new Date())
+					.setWarehouseLevel(box.getWarehouseLevel())
+					.setWarehouseItemBox(box)
+					.createWarehouseItem();	
+			warehouseItemService.save(item);
+			item.setInventory(inventoryList.get(0));
+		} else {
+			throw new InvalidProductBarcodeException("Cannot find a product with the barcode " + barcode);
+		}
+		
+		return item;
+	}
+}

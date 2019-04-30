@@ -1,0 +1,111 @@
+package com.samsbeauty.warehouse.controllers;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.google.gson.Gson;
+import com.samsbeauty.old.model.Company;
+import com.samsbeauty.warehouse.exception.rest.WarehouseEmployeeNotFoundException;
+import com.samsbeauty.warehouse.exception.rest.WrongDateFormatException;
+import com.samsbeauty.warehouse.old.helper.CompanyRestHelper;
+import com.samsbeauty.warehouse.old.helper.OrderInfoHelper;
+
+@Controller
+public class MainController {			
+	@Autowired private CompanyRestHelper companyRestHelper;
+	@Autowired private OrderInfoHelper orderInfoHelper;
+    
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@RequestMapping(value="/", method=RequestMethod.GET)
+    public String home(Model model, HttpServletRequest request, HttpServletResponse response) {
+    	/* For test, get all menu list */
+    	//Page<Menu> list = menuService.getAll(1, 1000, new Sort(Sort.Direction.ASC, "ordered"));
+    	
+    	//model.addAttribute("menuList", list.getContent());
+    	
+    	return "index";
+    }
+    @RequestMapping(value="/adjustmentRequest", method=RequestMethod.GET)
+    public String adjustmentRequest(Model model) {
+    	return "content/adjustment_request";
+    }
+    @RequestMapping(value="/dashboard", method=RequestMethod.GET)
+    public String dashboard(Model model, HttpServletRequest request) {    
+    	
+    	return "content/dashboard";
+    }
+    
+    @RequestMapping(value="/menu", method=RequestMethod.GET)
+    public String menu(Model model) {
+    	return "content/menu";
+    }
+    
+    @RequestMapping(value="/role", method=RequestMethod.GET)
+    public String role(Model model) {
+    	return "content/role";
+    }
+    
+    @RequestMapping(value="/employee", method=RequestMethod.GET)
+    public String employee(Model model) {
+    	return "content/employee";
+    }
+    
+    @RequestMapping(value="/pickingjob", method=RequestMethod.GET) 
+    public String pickingjob(Model model) {
+    	Integer numberOfNewOrders = 0;
+    	try {
+    		numberOfNewOrders = orderInfoHelper.getNumberOfNewOrders();	
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	model.addAttribute("numberOfNewOrders", numberOfNewOrders.toString());
+    	return "content/pickingjob";
+    }
+    
+    @RequestMapping(value="/pickingGroup", method=RequestMethod.GET)
+    public String pickingGroup(Model model) {
+    	// Get Company List
+    	List<Company> companyList = companyRestHelper.getList();
+    	Gson gson = new Gson();    	
+    	model.addAttribute("companyListJson", gson.toJson(companyList));
+    	return "content/picking_group";
+    }
+    
+    @RequestMapping(value="/warehouseLocation", method=RequestMethod.GET) 
+    public String warehouseLocation(Model model) {
+    	return "content/warehouse_location";
+    }
+    
+    @RequestMapping(value="/setting", method=RequestMethod.GET)
+    public String setting(Model model) {
+    	return "content/setting";
+    }
+    
+    @RequestMapping(value="/performanceReport", method=RequestMethod.GET)
+    public String performanceReport(
+    		Model model,
+    		@RequestParam("employeeId") final Long employeeId, 
+    		@RequestParam("reportDate") final String reportDate) throws WarehouseEmployeeNotFoundException, WrongDateFormatException {
+		
+    	model.addAttribute("employeeId", employeeId);
+    	model.addAttribute("reportDate", reportDate);
+    	return "report/performance_report";
+    }
+    
+    @RequestMapping(value="/performance", method=RequestMethod.GET)
+    public String performance(Model model) {
+    	return "content/performance";
+    }
+}

@@ -1,0 +1,142 @@
+package com.samsbeauty.warehouse.printer;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.samsbeauty.warehouse.exception.rest.WrongParameterException;
+import com.samsbeauty.warehouse.model.WarehouseItemBox;
+import com.samsbeauty.warehouse.model.WarehouseLevel;
+import com.samsbeauty.warehouse.printer.model.Printer;
+import com.samsbeauty.warehouse.printer.model.PrinterLabel;
+import com.samsbeauty.warehouse.printer.service.PrinterLabelService;
+import com.samsbeauty.warehouse.printer.service.PrinterService;
+import com.samsbeauty.warehouse.printer.util.LabelBarcodePrinterUtil;
+import com.samsbeauty.warehouse.printer.util.PrinterServer;
+import com.samsbeauty.warehouse.service.WarehouseItemBoxService;
+import com.samsbeauty.warehouse.service.WarehouseLevelService;
+
+@RestController
+@RequestMapping("/api/printer")
+public class PrinterController {
+
+	@Autowired private PrinterService printerService;
+	@Autowired private PrinterLabelService printerLabelService;
+	@Autowired private WarehouseLevelService warehouseLevelService;
+	@Autowired private WarehouseItemBoxService warehouseItemBoxService;
+	
+	@Value("${page.default.num}")
+	protected Integer DEFAULT_NUM_PER_PAGE;
+	
+	@Value("${printer.server.url}")
+	protected String PRINTER_SERVER_URL;
+
+	// Retrieve All Resources
+	@RequestMapping(method=RequestMethod.GET)
+	ResponseEntity<List<Printer>> getAll() throws WrongParameterException {
+		List<Printer> printerList = printerService.getAll();
+		return new ResponseEntity<>(printerList, HttpStatus.OK);
+	}
+
+	@RequestMapping(method=RequestMethod.POST)
+	Printer add(@RequestBody @Valid final Printer printer) {
+		PrinterLabel printerLabel = printerLabelService.getOne(printer.getPrinterLabel().getLabelId()); 
+		Printer newPrinter = new Printer(printer.getServerName(), printer.getPrinterName(), printerLabel, printer.getPort());
+		return printerService.save(newPrinter);
+	}
+
+	@RequestMapping(method=RequestMethod.PUT)
+	Printer update(@RequestBody @Valid final Printer printer) {
+		PrinterLabel printerLabel = printerLabelService.getOne(printer.getPrinterLabel().getLabelId());
+		Printer updatePrinter = printerService.getOne(printer.getPrinterId());
+		updatePrinter.update(printer.getServerName(), printer.getPrinterName(), printerLabel, updatePrinter.getPort());
+		return updatePrinter;
+	}
+
+	@RequestMapping(method=RequestMethod.DELETE, value="/{printerId}")
+	Printer delete(@PathVariable Long printerId) {
+		Printer deletePrinter = printerService.getOne(printerId);
+		deletePrinter.deactivate();
+		return  printerService.save(deletePrinter);
+	}
+	
+	@RequestMapping(method=RequestMethod.DELETE, value="/ids/{printerIds}")
+	ResponseEntity<List<Printer>> deleteByIds(@PathVariable String printerIds) {
+		List<Printer> deletedList = new ArrayList<>();
+		List<String> ids = Arrays.asList(printerIds.split(","));
+		for(String id : ids) {
+			Long printerId = Long.valueOf(id);
+			Printer printer = printerService.getOne(printerId);
+			printer.deactivate();
+			deletedList.add(printer);
+			printerService.save(printer);
+		}
+		
+		return new ResponseEntity<List<Printer>>(deletedList, HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(method=RequestMethod.POST, value="/{printerId}/levelIds/{levelIds}")
+	ResponseEntity<List<WarehouseLevel>> printLevels(@PathVariable Long printerId, @PathVariable String levelIds) {
+		Printer printer = printerService.getOne(printerId);
+		List<String> ids = Arrays.asList(levelIds.split(","));
+		List<WarehouseLevel> list = new ArrayList<>();
+		for(String id : ids){
+			Long levelId = Long.valueOf(id);
+			WarehouseLevel level = warehouseLevelService.getOne(levelId);
+			list.add(level);
+		}
+		
+		StringBuilder genBar = new StringBuilder();
+		genBar.append("location:"); 
+		genBar.append(printer.getPrinterName());
+		genBar.append("::");
+		genBar.append(printer.getServerName());
+		genBar.append("::");
+		genBar.append(printer.getPrinterLabel().getLabelType());
+		genBar.append("##");
+		genBar.append(LabelBarcodePrinterUtil.getWarehouseBarcode(list, "::", ","));
+		
+		PrinterServer.send(genBar.toString(), PRINTER_SERVER_URL, printer.getPort());
+		
+		return new ResponseEntity<>(list, HttpStatus.OK);
+	}
+	
+	@RequestMapping(method=RequestMethod.POST, value="/{printerId}/boxIds/{boxIds}")
+	ResponseEntity<List<WarehouseItemBox>> printBoxes(@PathVariable Long printerId, @PathVariable String boxIds) {
+		Printer printer = printerService.getOne(printerId);
+		List<String> ids = Arrays.asList(boxIds.split(","));
+		List<WarehouseItemBox> list = new ArrayList<>();
+		for(String id : ids) {
+			Integer boxId = Integer.valueOf(id);
+			WarehouseItemBox itemBox = warehouseItemBoxService.getOne(boxId);
+			list.add(itemBox);
+		}
+
+		StringBuilder genBar = new StringBuilder();
+		genBar.append("box:"); 
+		genBar.append(printer.getPrinterName());
+		genBar.append("::");
+		genBar.append(printer.getServerName());
+		genBar.append("::");
+		genBar.append(printer.getPrinterLabel().getLabelType());
+		genBar.append("##");
+		genBar.append(LabelBarcodePrinterUtil.getBoxBarcode(list, "::"));
+		
+		PrinterServer.send(genBar.toString(), PRINTER_SERVER_URL, printer.getPort());
+		
+		return new ResponseEntity<>(list, HttpStatus.OK);
+	}
+}

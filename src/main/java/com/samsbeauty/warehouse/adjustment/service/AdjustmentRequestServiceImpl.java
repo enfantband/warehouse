@@ -1,0 +1,51 @@
+package com.samsbeauty.warehouse.adjustment.service;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.stereotype.Service;
+
+import com.samsbeauty.warehouse.adjustment.model.AdjustmentRequest;
+import com.samsbeauty.warehouse.adjustment.repository.AdjustmentRequestRepository;
+import com.samsbeauty.warehouse.adjustment.specification.AdjustmentRequestSpecifications;
+
+@Service
+@Transactional
+public class AdjustmentRequestServiceImpl implements AdjustmentRequestService {
+	@Autowired
+	private AdjustmentRequestRepository adjustmentRequestRepository;
+
+	public Page<AdjustmentRequest> getAll(Integer pageNumber, Integer pageSize, Sort sort) {
+		Specifications<AdjustmentRequest> chainFilter = Specifications.where(AdjustmentRequestSpecifications.activated(true));
+		
+		return adjustmentRequestRepository.findAll(chainFilter, new PageRequest(pageNumber-1, pageSize, sort));
+	}
+	public List<AdjustmentRequest> getAll() {
+		Specifications<AdjustmentRequest> chainFilter = Specifications.where(AdjustmentRequestSpecifications.activated(true));
+		
+		return adjustmentRequestRepository.findAll(chainFilter);
+	}
+	public AdjustmentRequest getOne(Long requestId) {
+		return adjustmentRequestRepository.getOne(requestId);
+	}
+	public AdjustmentRequest getOneByPickingItemId(Long pickingItemId) {
+		return adjustmentRequestRepository.getOneByPickingItemId(pickingItemId);
+	}
+	public AdjustmentRequest save(AdjustmentRequest adjustmentRequest) {
+		return adjustmentRequestRepository.save(adjustmentRequest);
+	}
+	public void delete(Long requestId) {
+		adjustmentRequestRepository.delete(requestId);
+	}
+	
+
+}

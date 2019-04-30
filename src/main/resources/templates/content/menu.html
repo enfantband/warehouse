@@ -1,0 +1,269 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="page-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i> 
+				Menu 
+		</h1>
+	</div>
+</div>
+
+<!-- widget grid -->
+<section id="widget-grid" class="">
+
+	<!-- row -->
+	<div class="row">
+
+		<!-- NEW WIDGET START -->
+		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
+				<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+					<h2>Menu</h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget edit box -->
+					<div class="jarviswidget-editbox">
+						<!-- This area used as dropdown edit box -->
+						
+					</div>
+					
+					<div class="widget-body-toolbar">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
+								<a class="btn btn-default" id="menuTableRole">Set Role</a>
+								<a class="btn btn-default" id="menuTableAdd">Add</a>
+								<a class="btn btn-default" id="menuTableEdit">Edit</a>
+								<a class="btn btn-default" id="menuTableDelete">Delete</a>
+							</div>
+						</div>
+					</div>
+					<!-- end widget edit box -->
+
+					<!-- widget content -->
+					<div class="widget-body no-padding" id="menuTableContent">
+
+					</div>
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+				
+			</div>
+			<!-- end widget -->
+
+		</article>
+		<!-- WIDGET END -->
+
+	</div>
+
+	<!-- end row -->
+
+	<!-- end row -->
+
+</section>
+<!-- end widget grid -->
+<script src="js/services/menu.service.js"></script>
+<script src="js/services/role.service.js"></script>
+<script src="js/controller/menu.role.controller.js"></script>
+<script src="js/view/menu.role.view.js"></script>
+<script type="text/javascript">
+
+//<![CDATA[
+	pageSetUp();
+	
+	// PAGE RELATED SCRIPTS
+	
+	var menuService = new MenuService(); 
+	var roleService = new RoleService();
+	
+	// pagefunction	
+	var pagefunction = function() {
+		
+		var responsiveHelper_dt_basic = undefined;
+		
+		var breakpointDefinition = {
+			tablet : 1024,
+			phone : 480
+		};
+
+		var menuService = new MenuService();
+		
+		/* End get services */
+				
+		
+		var menuFormController = new FormController({
+			tableListUrl: "/api/menu",
+			tableId: 'menu_table',
+			tableViewId: "menuTableContent",
+			tableHeaders: [
+			 			{
+			        		dataHide: "phone",
+			        		label: "ID",
+							name: 'menuId'
+			        	},
+			        	{
+			        		dataClass: "expand",
+			        		icon: "fa-list",
+			        		label: "Name",
+							name: 'name'
+			        	},
+			        	{
+			        		dataHide: "phone",
+			        		label: "Icon",
+			        		name: "icon",
+			        		type: "icon"
+			        	},
+			        	{
+			        		dataHide: "phone",
+			        		label: "Url",
+			        		name: "url",
+			        		icon: "fa-url"
+			        	},
+			        	{
+			        		dataHide: "phone",
+			        		label: "Sorting Order",
+			        		name: "ordered",
+			        		icon: "fa-sort-numeric-asc"
+			        	},
+			        	{
+			        		dataHide: "phone",
+			        		label: "Reg. Date",
+			        		name: "regDate",
+			        		type: "date"
+			        	},
+			        	{
+							name: 'roles',
+			        		dataHide: "phone",
+			        		label: "Role",
+			        		type: 'list-label',
+			        		nameField: 'roleName'
+			        	}
+			               ],
+			service: menuService,
+			addFormShownAction: function() {
+				$("#add-name").focus();
+			},
+			editFormShownAction: function() {
+				$("#edit-name").focus();
+			},
+			forms: {
+				name: 'menu',
+				addElements: [
+					{
+						fieldset: [
+								{ icon: 'fa-list', type:'text', label: 'Menu Name', name:'add-name', id:'add-name', placeholder:'Name of Menu', required: true, editable: true },
+								{ icon: 'fa-link', type:'text', label: 'Link Url', name:'add-url', id:'add-url', placeholder:'Link Url', required: true, editable: true },
+								{ icon: 'fa-circle', type:'text', label: 'Menu Icon', name:'add-icon', id:'add-icon', placeholder:'Icon', required: true, editable: true },
+								{ icon: 'fa-sort-numeric-asc', type:'number', label: 'Sorint Order', name:'add-ordered', id:'add-ordered', placeholder:'Sorting Order', required: true, editable: true }
+						]
+					},
+					{
+						fieldset: [
+								{ icon: 'fa-info', type:'textarea', label: 'Memo', name:'add-description', id:'add-description', placeholder:'Memo about this menu', required: false, editable: true }
+						]
+					}   
+				],
+				editElements: [
+					{
+						fieldset: [
+								{ icon: 'fa-list', type:'text', label: 'Menu Name', name:'edit-name', id:'edit-name', placeholder:'Name of Menu', required: true, editable: true },
+								{ icon: 'fa-link', type:'text', label: 'Link Url', name:'edit-url', id:'edit-url', placeholder:'Link Url', required: true, editable: true },
+								{ icon: 'fa-circle', type:'text', label: 'Menu Icon', name:'edit-icon', id:'edit-icon', placeholder:'Icon', required: true, editable: true },
+								{ icon: 'fa-sort-numeric-asc', type:'number', label: 'Sorint Order', name:'edit-ordered', id:'edit-ordered', placeholder:'Sorting Order', required: true, editable: true }
+						]
+					},
+					{
+						fieldset: [
+								{ icon: 'fa-info', type:'textarea', label: 'Memo', name:'edit-description', id:'edit-description', placeholder:'Memo about this menu', required: false, editable: true }
+						]
+					}				               
+				]
+			},
+			getAddModel: function() {
+				return {
+					name: $("#add-name").val(),
+					description: $("#add-description").val(),
+					icon: $("#add-icon").val(),
+					url: $("#add-url").val(),
+					ordered: $("#add-ordered").val()	
+				};
+			},
+			getEditModel: function(item) {
+				return {
+					menuId: item.menuId,
+					name: $("#edit-name").val(),
+					description: $("#edit-description").val(),
+					icon: $("#edit-icon").val(),
+					url: $("#edit-url").val(),
+					ordered: $("#edit-ordered").val()	
+				};
+			},
+			getDeleteIds: function(items) {
+				var ids = [];
+				for(var i=0; i<items.length; i++) {
+					ids.push(items[i].menuId);
+				}
+				return ids.join(',');
+			},
+			mapModelToEditForm: function(item) {
+				$("#edit-name").val(item.name);
+				$("#edit-description").val(item.description);
+				$("#edit-url").val(item.url);
+				$("#edit-icon").val(item.icon);
+				$("#edit-ordered").val(item.ordered);	
+			},
+			dataChangeEvent: function() {
+			}
+		});
+		var menuRoleController = new MenuRoleController({
+			addFormId: 'roleSettingWindow',
+			menuService: menuService,
+			roleService: roleService,
+			tableController: menuFormController
+		});
+
+		$("#menuTableAdd").click(function(e) {
+			menuFormController.showAddModal();
+		});
+
+		$("#menuTableEdit").click(function(e) {
+			menuFormController.showEditModal();
+		});
+
+		$("#menuTableDelete").click(function(e) {
+			menuFormController.showDeleteModal();
+		});
+		
+		// Additional features
+		$("#menuTableRole").click(function() {
+			if(menuFormController.getSelectedItems() == null || menuFormController.getSelectedItems().length == 0) {
+				showMessage("error", "Please select a menu");
+			} else {
+				// Setup role setting
+				menuRoleController.showSettingForm(menuFormController.getSelectedItems()[0].menuId);
+			}
+		}); 
+	};
+
+	// load related plugins
+	
+	loadScript("js/plugin/datatables/jquery.dataTables.min.js", function(){
+		loadScript("js/plugin/datatables/dataTables.colVis.min.js", function(){
+			loadScript("js/plugin/datatables/dataTables.tableTools.min.js", function(){
+				loadScript("js/plugin/datatables/dataTables.bootstrap.min.js", function(){
+					loadScript("js/plugin/datatable-responsive/datatables.responsive.min.js", function(){
+						loadScript("js/plugin/datatable-select/js/dataTables.select.min.js",pagefunction);
+					});
+				});
+			});
+		});
+	});
+//]]>	
+
+</script>

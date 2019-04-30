@@ -1,0 +1,349 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="page-title txt-color-blueDark"><i class="fa fa-gear fa-fw "></i> 
+			Setting
+		</h1>
+	</div>
+</div>
+<!-- widget grid -->
+<section id="widget-grid" class="">
+
+	<!-- row -->
+	<div class="row">
+
+		<article class="col-sm-12 col-md-6 col-lg-6">
+
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-darken" data-widget-colorbutton="false" data-widget-editbutton="false">
+				<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+					<h2>Printer Setting</h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget edit box -->
+					<div class="jarviswidget-editbox">
+						<!-- This area used as dropdown edit box -->
+						
+					</div>
+					
+					<div class="widget-body-toolbar">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
+								<a class="btn btn-default" onclick="addPrinter()">Add</a>
+								<a class="btn btn-default" onclick="editPrinter()">Edit</a>
+								<a class="btn btn-danger" onclick="deletePrinter()">Delete</a>
+							</div>
+						</div>
+					</div>
+					<!-- end widget edit box -->
+
+					<!-- widget content -->
+					<div class="widget-body no-padding" id="printerTableContent">
+
+					</div>
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+				
+			</div>
+			<!-- end widget -->
+			
+		</article>
+		<article class="col-sm-12 col-md-6 col-lg-6">
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-darken" data-widget-colorbutton="false" data-widget-editbutton="false">
+				<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+					<h2>Printer Label Setting</h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget edit box -->
+					<div class="jarviswidget-editbox">
+						<!-- This area used as dropdown edit box -->
+						
+					</div>
+					
+					<div class="widget-body-toolbar">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
+								<a class="btn btn-default" onclick="addPrinterLabel()">Add</a>
+								<a class="btn btn-default" onclick="editPrinterLabel()">Edit</a>
+								<a class="btn btn-default" onclick="deletePrinterLabel()">Delete</a>
+							</div>
+						</div>
+					</div>
+					<!-- end widget edit box -->
+
+					<!-- widget content -->
+					<div class="widget-body no-padding" id="printerLableTableContent">
+					</div>
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+				
+			</div>
+		</article>
+	</div>
+</section>
+
+	
+
+<!-- end widget grid -->
+<script src="js/services/printer.service.js"></script>
+<script src="js/services/printer.label.service.js"></script>
+<script src="js/controller/form.controller.js"></script>
+<script type="text/javascript">
+
+//<![CDATA[
+	pageSetUp();
+
+	// PAGE RELATED SCRIPTS
+	// pagefunction
+	
+	var printerFormController = null;
+	var printerLabelFormController = null;
+	
+	function addPrinter() {
+		printerFormController.showAddModal();
+	}
+	function editPrinter() {
+		printerFormController.showEditModal();
+	}
+	function deletePrinter() {
+		printerFormController.showDeleteModal();
+	}
+	function addPrinterLabel() {
+		printerLabelFormController.showAddModal();	
+	}
+	function editPrinterLabel() {
+		printerLabelFormController.showEditModal();
+	}
+	function deletePrinterLabel() {
+		printerLabelFormController.showDeleteModal();
+	}
+	
+	var pagefunction = function() {
+		
+		
+		var responsiveHelper_dt_basic = undefined;
+		
+		var breakpointDefinition = {
+			tablet : 1024,
+			phone : 480
+		};
+		/* Get Services */
+		var printerService = new PrinterService();
+		var printerLabelService = new PrinterLabelService();
+		
+		/* End get services */
+		
+		printerFormController = new FormController({
+			tableListUrl: "/api/printer",
+			tableId: 'printer_table',
+			tableHeaders: [{
+				dataHide: 'phone',
+				label: "ID",
+				name: 'printerId'
+			}, {
+				dataClass: 'expand',
+				icon: 'fa-fw',
+				label: 'Name',
+				name: 'printerName'
+			}, {
+				icon: 'fa-fw',
+				label: 'Server',
+				name: 'serverName'
+			}
+			
+			],
+			tableViewId: "printerTableContent",
+			forms: {
+				name: 'Printer Setting',
+				addElements: [
+					{
+						fieldset: [
+								{ type:'text', label: 'Printer Name', name:'add-printer-name', id:'add-printer-name', placeholder:'Printer Name', required: true, editable: true },
+								{ type:'text', label: 'Printer Server Name', name:'add-server-name', id:'add-server-name', placeholder:'Printer Server Name', required: true, editable: true },
+								{ type:'select', label: 'Printer Label', id:'add-printer-label', data: printerLabelService.getListForSelect(), editable: true},
+								{ type:'text', label: 'Printer Port', id:'add-printer-port', placeholder:'Printer Port', required:true, editable: true}
+						]
+					}   
+				],
+				editElements: [
+					{
+						fieldset: [
+								{ type:'text', label: 'Printer Name', name:'edit-printer-name', id:'edit-printer-name', placeholder:'Printer Name', required: true, editable: true },
+								{ type:'text', label: 'Printer Server Name', name:'edit-server-name', id:'edit-server-name', placeholder:'Printer Server Name', required: true, editable: true },
+								{ type:'text', label: 'Printer Port', id:'edit-printer-port', placeholder:'Printer Port', required:true, editable: true}
+							]
+					}				               
+				]
+			},
+			service: printerService,
+			addFormShownAction: function() {
+				$("#add-printer-name").focus();
+			},
+			editFormShownAction: function() {
+				$("#edit-printer-name").focus();
+			},
+			getAddModel: function() {
+				var printerLabel = {
+					labelId: $("#add-printer-label").val()
+				};
+				return {
+					printerName: $("#add-printer-name").val(),
+					serverName: $("#add-server-name").val(),
+					printerLabel: printerLabel,
+					port: $("#add-printer-port").val()
+				};
+			},
+			getEditModel: function(item) {
+				var printerLabel = {
+						labelId: $("#add-printer-label").val()
+					};
+				return {
+					printerId: item.printerId,
+					printerName: $("#edit-printer-name").val(),
+					serverName: $("#edit-server-name").val(),
+					printerLabel: printerLabel,
+					port: $("#edit-printer-port").val()
+				};
+			},
+			getDeleteIds: function(items) {
+				var ids = [];
+				for(var i=0; i<items.length; i++) {
+					ids.push(items[i].printerId);
+				}
+				return ids.join(',');
+			},
+			mapModelToEditForm: function(item) {
+				$("#edit-server-name").val(item.serverName);
+				$("#edit-printer-name").val(item.printerName);	
+			},
+			dataChangeEvent: function() {
+				roleTreeController.reload();
+			}
+		});
+		printerLabelFormController = new FormController({
+			tableListUrl: "/api/printer/label",
+			tableId: 'printerLableTable',
+			tableHeaders: [{
+				dataHide: 'phone',
+				label: "ID",
+				name: 'labelId'
+			}, {
+				dataClass: 'expand',
+				icon: 'fa-fw',
+				label: 'Name',
+				name: 'labelName'
+				} 
+			],
+			tableViewId: "printerLableTableContent",
+			forms: {
+				name: 'Printer Label Setting',
+				addElements: [
+					{
+						fieldset: [
+								{ type:'text', label: 'Label Name', name:'add-label-name', id:'add-label-name', placeholder:'Label Name', required: true, editable: true },
+								{ type:'text', label: 'Label Type', name:'add-label-type', id:'add-label-type', placeholder:'Label Type', required: true, editable: true }    		           
+						]
+					}   
+				],
+				editElements: [
+					{
+						fieldset: [
+								{ type:'text', label: 'Label Name', name:'edit-label-name', id:'edit-label-name', placeholder:'Label Name', required: true, editable: true },
+								{ type:'text', label: 'Label Type', name:'edit-label-type', id:'edit-label-type', placeholder:'Label Type', required: true, editable: true }   		           
+							]
+					}				               
+				]
+			},
+			service: printerLabelService,
+			addFormShownAction: function() {
+				$("#add-label-name").focus();
+			},
+			editFormShownAction: function() {
+				$("#edit-label-name").focus();
+			},
+			getAddModel: function() {
+				return {
+					labelName: $("#add-label-name").val(),
+					labelType: $("#add-label-type").val()
+				};
+			},
+			getEditModel: function(item) {
+				return {
+					labelId: item.labelId,
+					labelName: $("#edit-label-name").val(),
+					labelType: $("#edit-label-type").val()
+				};
+			},
+			getDeleteIds: function(items) {
+				var ids = [];
+				for(var i=0; i<items.length; i++) {
+					ids.push(items[i].labelId);
+				}
+				return ids.join(',');
+			},
+			mapModelToEditForm: function(item) {
+				$("#edit-label-name").val(item.labelName);
+				$("#edit-label-type").val(item.labelType);	
+			},
+			dataChangeEvent: function() {
+			}
+		});
+		
+		reloadTreeLib();
+		
+	};
+	
+	// end pagefunction
+	
+	// destroy generated instances 
+	// pagedestroy is called automatically before loading a new page
+	// only usable in AJAX version!
+
+	var pagedestroy = function(){
+		
+		/*
+		Example below:
+
+		$("#calednar").fullCalendar( 'destroy' );
+		if (debugState){
+			root.console.log("✔ Calendar destroyed");
+		} 
+
+		For common instances, such as Jarviswidgets, Google maps, and Datatables, are automatically destroyed through the app.js loadURL mechanic
+
+		*/
+
+
+	}
+
+	// end destroy
+
+	// run pagefunction on load
+
+	loadScript("js/plugin/datatables/jquery.dataTables.min.js", function(){
+		loadScript("js/plugin/datatables/dataTables.colVis.min.js", function(){
+			loadScript("js/plugin/datatables/dataTables.tableTools.min.js", function(){
+				loadScript("js/plugin/datatables/dataTables.bootstrap.min.js", function(){
+					loadScript("js/plugin/datatable-responsive/datatables.responsive.min.js", function(){
+						loadScript("js/plugin/datatable-select/js/dataTables.select.min.js",pagefunction)
+					});
+				});
+			});
+		});
+	});
+//]]>
+</script>

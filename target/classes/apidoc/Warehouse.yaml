@@ -1,0 +1,70 @@
+swagger: 2.0
+info:
+  version: "0.0.1"
+  title: Warehouse API
+basePath: /
+paths:
+  /warehouse:
+    get:
+      description:
+      parameters:
+        - name: pageSize
+          in: query
+          type: number
+          description: size of list
+          required: false
+        - name: page
+          in: query
+          type: integer
+          description: page
+          required: false
+        - name: sortingDirection
+          in: query
+          type: string
+          description: DESC | ASC
+          required: false
+        - name: sortingFields
+          in: query
+          type: string
+          description: sorting fields
+          required: false
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfWarehouse
+            type: array
+            items:
+              $ref: '#/definitions/Warehouse'
+    get:
+      parameters:
+        - name: Warehouse
+          in: body
+          description: The Warehouse JSON you want to post
+          schema:
+            $ref: '#/definitions/Warehouse'
+    post:
+      parameters:
+        - name: Warehouse
+          in: body
+          description: The Warehouse JSON you want to post
+          schema:
+            $ref: '#/definitions/Warehouse'
+    put:
+      parameters:
+        - name: Warehouse
+          in: body
+          description: The Warehouse JSON you want to post
+          schema:
+            $ref: '#/definitions/Warehouse'
+    delete:
+      parameters:
+        - name: Warehouse
+          in: body
+          description: The Warehouse JSON you want to post
+          schema:
+            $ref: '#/definitions/Warehouse'
+definitions:
+  Warehouse:
+    type: object
+    properties:

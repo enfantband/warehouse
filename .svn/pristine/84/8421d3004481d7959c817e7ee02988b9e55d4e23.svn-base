@@ -1,0 +1,334 @@
+package com.samsbeauty.warehouse.model;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Where;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.samsbeauty.warehouse.employee.model.WarehouseEmployee;
+import com.samsbeauty.warehouse.model.converter.WarehouseLevelStatusConverter;
+import com.samsbeauty.warehouse.model.converter.WarehouseLevelTypeConverter;
+import com.samsbeauty.warehouse.tag.model.WarehouseTag;
+
+@Entity
+@Table(name="warehouse_level")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class WarehouseLevel implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3992586746121338922L;
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="level_id")
+	private Long levelId;
+
+	@Column(name="level_code", columnDefinition="CHAR(2)")
+	private String levelCode;
+	
+	@Column(name="level_status")
+	@Convert(converter = WarehouseLevelStatusConverter.class)
+	private String levelStatus;
+	
+	@Column(name="level_type")
+	@Convert(converter = WarehouseLevelTypeConverter.class)
+	private String levelType;
+
+	@Column(name="r_date")
+	private Date regDate;
+	@Column(name="m_date")
+	private Date modDate;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="r_e_gid", referencedColumnName="gid")
+	private WarehouseEmployee regBy;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="m_e_gid", referencedColumnName="gid")
+	private WarehouseEmployee modBy;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="subgroup_id")
+	@Where(clause="use_flag = 'Y'")
+	private WarehouseSubgroup warehouseSubgroup; 
+
+	@Enumerated(EnumType.STRING)
+	private UseFlag useFlag;
+		
+	@OneToMany(fetch=FetchType.LAZY)
+	@JoinColumn(name="level_id")
+	@Where(clause="use_flag='Y'")
+	@JsonIgnore
+	private List<WarehouseItem> warehouseItems = new ArrayList<>();
+	
+	@OneToMany(fetch=FetchType.LAZY)
+	@JoinColumn(name="level_id")
+	@Where(clause="use_flag='Y'")
+	@JsonIgnore
+	private List<WarehouseItemBox> warehouseItemBoxes = new ArrayList<>();
+	
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="tag_id")
+	private WarehouseTag warehouseTag;
+	
+	
+	public static class LevelStatus {
+		public static final String IN_STOCK_CODE = "092003000";
+		public static final String EMPTY_CODE = "092001000";
+		public static final String RESERVED_CODE = "092002000";
+		
+		public static final String IN_STOCK = "In Stock";
+		public static final String EMPTY = "Empty";
+		public static final String RESERVED = "Reserved";
+	}
+	
+	public static class LevelType {
+		public static final String BULK_CODE = "096002000";
+		public static final String PICKING_CODE = "096001000";
+		
+		public static final String BULK = "Bulk";
+		public static final String PICKING = "Picking";
+	}
+
+	
+	public void update(String levelType, String levelStatus, WarehouseEmployee modBy, Date modDate) {
+		this.levelType = levelType;
+		this.levelStatus = levelStatus;
+		this.modBy = modBy;
+		this.modDate = modDate;
+	}
+	
+	public void delete() {
+		this.useFlag = UseFlag.N;
+	}
+	
+	public WarehouseSubgroup getWarehouseSubgroup() {
+		return warehouseSubgroup;
+	}
+	public String getWarehouseCode() {
+		StringBuffer sb = new StringBuffer();
+		WarehouseGroup warehouseGroup = warehouseSubgroup.getWarehouseGroup();
+		List<WarehouseAisle> warehouseAisles = warehouseGroup.getWarehouseAisles();
+		// Get the first aisle's warehouse code because all aisles which have same warehouseGroup must be in the same warehouse
+		if(warehouseAisles.size() > 0) {
+			Warehouse warehouse = warehouseAisles.get(0).getWarehouse();
+			sb.append(warehouse.getWarehouseCode());
+			sb.append(warehouseAisles.get(0).getAisleCode());
+			String groupCode = warehouseSubgroup.getWarehouseGroup().getGroupCode();
+			sb.append(groupCode);
+			String subGroupCode = warehouseSubgroup.getSubgroupCode();
+			sb.append(subGroupCode);
+			sb.append(levelCode);
+		} 
+		return sb.toString();
+	}
+	
+	public String getLocationName() {
+		StringBuffer sb = new StringBuffer();
+		WarehouseGroup warehouseGroup = warehouseSubgroup.getWarehouseGroup();
+		List<WarehouseAisle> warehouseAisles = warehouseGroup.getWarehouseAisles();
+		// Get the first aisle's warehouse code because all aisles which have same warehouseGroup must be in the same warehouse
+		if(warehouseAisles.size() > 0) {
+			Warehouse warehouse = warehouseAisles.get(0).getWarehouse();
+			sb.append(warehouse.getWarehouseTag().getTag());
+			sb.append("-");
+			sb.append(warehouseAisles.get(0).getWarehouseTag().getTag());
+			sb.append("-");
+			//String groupTag = warehouseSubgroup.getWarehouseGroup().getWarehouseTag().getTag();
+			//sb.append(groupTag);
+			String subGroupTag = warehouseSubgroup.getWarehouseTag().getTag();
+			sb.append(subGroupTag);
+			sb.append("-");
+			sb.append(warehouseTag.getTag());
+		} 
+		return sb.toString();
+	}
+	
+	public String getLocationName(String separator) {
+		StringBuffer sb = new StringBuffer();
+		WarehouseGroup warehouseGroup = warehouseSubgroup.getWarehouseGroup();
+		List<WarehouseAisle> warehouseAisles = warehouseGroup.getWarehouseAisles();
+		// Get the first aisle's warehouse code because all aisles which have same warehouseGroup must be in the same warehouse
+		if(warehouseAisles.size() > 0) {
+			Warehouse warehouse = warehouseAisles.get(0).getWarehouse();
+			sb.append(warehouse.getWarehouseTag().getTag());
+			sb.append(separator);
+			sb.append(warehouseAisles.get(0).getWarehouseTag().getTag());
+			sb.append(separator);
+			String groupTag = warehouseSubgroup.getWarehouseGroup().getWarehouseTag().getTag();
+			sb.append(groupTag);
+			sb.append(separator);
+			String subGroupTag = warehouseSubgroup.getWarehouseTag().getTag();
+			sb.append(subGroupTag);
+			sb.append(separator);
+			sb.append(warehouseTag.getTag());
+		} 
+		return sb.toString();
+	}
+	
+	public String getLevelStatus() {
+		return levelStatus;
+	}
+	
+	public Long getLevelId() {
+		return levelId;
+	}
+	
+	public Date getRegDate() {
+		return regDate;
+	}
+	public Date getModDate() {
+		return modDate;
+	}
+	
+	public String getLevelCode() {
+		return levelCode;
+	}
+	
+	public String getLevelType() {
+		return levelType;
+	}
+	
+	public WarehouseTag getWarehouseTag() {
+		return warehouseTag;
+	}
+	
+	public WarehouseEmployee getRegBy() {
+		return regBy;
+	}
+	
+	public String getWarehouseSubgroupTag() {
+		return warehouseSubgroup.getWarehouseTag().getTag();
+	}
+	
+	public Integer getNumberOfItems() {
+		if(warehouseItems == null) return 0;
+		return warehouseItems.size();
+	}
+	public Integer getNumberOfBoxes() {
+		if(warehouseItemBoxes == null) return 0;
+		return warehouseItemBoxes.size();
+	}
+	public WarehouseLevel() {
+		
+	}
+	public WarehouseLevel(Long levelId, String levelCode, String levelStatus, String levelType, Date regDate, Date modDate,
+			WarehouseEmployee regBy, WarehouseEmployee modBy, WarehouseSubgroup warehouseSubgroup, WarehouseTag warehouseTag) {
+		super();
+		this.levelId = levelId;
+		this.levelCode = levelCode;
+		this.levelStatus = levelStatus;
+		this.levelType = levelType;
+		this.regDate = regDate;
+		this.modDate = modDate;
+		this.regBy = regBy;
+		this.modBy = modBy;
+		this.warehouseSubgroup = warehouseSubgroup;
+		this.useFlag = UseFlag.Y;
+		this.warehouseTag = warehouseTag;
+	}
+//	public String getLocationCode() {
+//		String subGroupCode = warehouseSubgroup.getSubgroupCode();
+//		String groupCode = warehouseSubgroup.getWarehouseGroup()
+//	}
+	
+	public static WarehouseLevelBuilder builder(WarehouseTag warehouseTag) {
+		return new WarehouseLevelBuilder(warehouseTag);
+	}
+	
+	// Builder 
+	
+	public static class WarehouseLevelBuilder {
+		private Long levelId;
+		private String levelCode;
+		private String levelStatus;
+		private String levelType;
+		private Date regDate;
+		private Date modDate;
+		private WarehouseEmployee regBy;
+		private WarehouseEmployee modBy;
+		private WarehouseSubgroup warehouseSubgroup;
+		private WarehouseTag warehouseTag;
+		
+		public WarehouseLevelBuilder(WarehouseTag warehouseTag) {
+			this.warehouseTag = warehouseTag;
+		}
+		
+		public WarehouseLevelBuilder setLevelId(Long levelId) {
+			this.levelId = levelId;
+			return this;
+		}
+		
+		public WarehouseLevelBuilder setLevelCode(String levelCode) {
+			this.levelCode = levelCode;
+			return this;
+		}
+		
+		public WarehouseLevelBuilder setLevelStatus(String levelStatus) {
+			this.levelStatus = levelStatus;
+			return this;
+		}
+		
+		public WarehouseLevelBuilder setLevelType(String levelType) {
+			this.levelType = levelType;
+			return this;
+		}
+		
+		public WarehouseLevelBuilder setRegDate(Date regDate) {
+			this.regDate = regDate;
+			return this;
+		}
+		
+		public WarehouseLevelBuilder setModDate(Date modDate) {
+			this.modDate = modDate;
+			return this;
+		}
+		
+		public WarehouseLevelBuilder setRegBy(WarehouseEmployee regBy) {
+			this.regBy = regBy;
+			return this;
+		}
+		
+		public WarehouseLevelBuilder setModBy(WarehouseEmployee modBy) {
+			this.modBy = modBy;
+			return this;
+		}
+		
+		public WarehouseLevelBuilder setWarehouseSubgroup(WarehouseSubgroup warehouseSubgroup) {
+			this.warehouseSubgroup = warehouseSubgroup;
+			return this;
+		}
+		
+		public WarehouseLevelBuilder setWarehouseTag(WarehouseTag warehouseTag) {
+			this.warehouseTag = warehouseTag;
+			return this;
+		}
+		
+		public WarehouseLevel createWarehouseLevel() {
+			return new WarehouseLevel(levelId, levelCode, levelStatus, levelType, regDate, modDate, regBy, modBy, warehouseSubgroup, warehouseTag);
+		}
+		
+	}
+
+}

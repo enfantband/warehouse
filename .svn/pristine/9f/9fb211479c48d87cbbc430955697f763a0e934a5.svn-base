@@ -1,0 +1,172 @@
+package com.samsbeauty.warehouse.woonseok.model;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.samsbeauty.warehouse.employee.model.WarehouseEmployee;
+import com.samsbeauty.warehouse.picking.model.PickingItem;
+
+@Entity
+@Table(name="woonseok")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Woonseok {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="request_id")
+	private Long requestId;
+	
+	
+	@ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name="picking_job_id")
+	private PickingItem pickingItem;
+	
+	@OneToMany(fetch=FetchType.LAZY)
+	@JoinColumn(name="request_id")
+	private List<WoonseokChild> woonseokChild;
+
+	public List<WoonseokChild> getWoonseokChild() {
+		return woonseokChild;
+	}
+
+	public void setWoonseokChild(List<WoonseokChild> woonseokChild) {
+		this.woonseokChild = woonseokChild;
+	}
+
+	@Column(name="reason")
+	private String reason;
+	
+	
+	@Column(name="status")
+	private String status;
+	
+
+	@Column(name="reg_date")
+	private Date regDate;
+	
+	@Column(name="mod_date")
+	private Date modDate;
+	
+	
+	public Long getRequestId() {
+		return requestId;
+	}
+	
+	public String getReason() {
+		return reason;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+	
+	
+	public Date getRegDate() {
+		return regDate;
+	}
+	
+	public Date getModDate() {
+		return modDate;
+	}
+
+	public void delete(WarehouseEmployee modBy, Date modDate) {
+		
+		
+		this.modDate = modDate;
+	}
+
+	public Woonseok() {
+		
+	}
+	
+	public Woonseok(Long requestId, PickingItem pickingItem, String reason,
+			String status, WarehouseEmployee regBy, WarehouseEmployee modBy, Date regDate, Date modDate) {
+		super();
+		this.requestId = requestId;
+		this.reason = reason;
+		this.status = status;
+
+		this.regDate = regDate;
+		this.modDate = modDate;
+	}
+	
+	public static WoonseokBuilder builder() {
+		return new WoonseokBuilder();
+	}
+	
+	public static class WoonseokBuilder {
+		private Long requestId;
+		private String reason;
+		private String status;
+		private PickingItem pickingItem;
+		private WarehouseEmployee regBy;		
+		private WarehouseEmployee modBy;	
+		private WoonseokChild woonseokChild;
+		private Date regDate;		
+		private Date modDate;
+		
+		public WoonseokBuilder copyOf(Woonseok ar) {
+			this.requestId = ar.getRequestId();
+			this.reason = ar.getReason();
+			this.status = ar.getStatus();
+			this.regDate = ar.getRegDate();
+			this.modDate = ar.getModDate();
+			return this;
+		}
+		
+		public WoonseokBuilder() {
+			
+		}
+		
+		public WoonseokBuilder setRequestId(Long requestId) {
+			this.requestId = requestId;
+			return this;
+		}
+		
+		public WoonseokBuilder setReason(String reason) {
+			this.reason = reason;
+			return this;
+		}
+		public WoonseokBuilder setStatus(String status) {
+			this.status = status;
+			return this;
+		}
+		public WoonseokBuilder setRegBy(WarehouseEmployee regBy) {
+			this.regBy = regBy;
+			return this;
+		}
+		public WoonseokBuilder setModBy(WarehouseEmployee modBy) {
+			this.modBy = modBy;
+			return this;
+		}
+		public WoonseokBuilder setRegDate(Date regDate) {
+			this.regDate = regDate;
+			return this;
+		}
+		public WoonseokBuilder setModDate(Date modDate) {
+			this.modDate = modDate;
+			return this;
+		}
+		public WoonseokBuilder setWoonseokChild(WoonseokChild woonseokChild){
+			this.woonseokChild = woonseokChild;
+			return this;
+		}
+		
+		public Woonseok createAdjustmentRequest() {
+			return new Woonseok(requestId, pickingItem, reason, status, regBy, modBy, regDate, modDate);
+		}
+	}
+}

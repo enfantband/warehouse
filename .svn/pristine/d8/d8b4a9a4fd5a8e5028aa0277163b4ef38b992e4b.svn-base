@@ -1,0 +1,70 @@
+swagger: 2.0
+info:
+  version: "0.0.1"
+  title: MissingExport API
+basePath: /missing
+paths:
+  /export:
+    get:
+      description:
+      parameters:
+        - name: pageSize
+          in: query
+          type: number
+          description: size of list
+          required: false
+        - name: page
+          in: query
+          type: integer
+          description: page
+          required: false
+        - name: sortingDirection
+          in: query
+          type: string
+          description: DESC | ASC
+          required: false
+        - name: sortingFields
+          in: query
+          type: string
+          description: sorting fields
+          required: false
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfMissingExport
+            type: array
+            items:
+              $ref: '#/definitions/MissingExport'
+    get:
+      parameters:
+        - name: MissingExport
+          in: body
+          description: The MissingExport JSON you want to post
+          schema:
+            $ref: '#/definitions/MissingExport'
+    post:
+      parameters:
+        - name: MissingExport
+          in: body
+          description: The MissingExport JSON you want to post
+          schema:
+            $ref: '#/definitions/MissingExport'
+    put:
+      parameters:
+        - name: MissingExport
+          in: body
+          description: The MissingExport JSON you want to post
+          schema:
+            $ref: '#/definitions/MissingExport'
+    delete:
+      parameters:
+        - name: MissingExport
+          in: body
+          description: The MissingExport JSON you want to post
+          schema:
+            $ref: '#/definitions/MissingExport'
+definitions:
+  MissingExport:
+    type: object
+    properties:

@@ -1,0 +1,434 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="page-title txt-color-blueDark"><i class="fa fa-lock fa-fw "></i> 
+			Role
+		</h1>
+	</div>
+</div>
+<!-- widget grid -->
+<section id="widget-grid" class="">
+
+	<!-- row -->
+	<div class="row">
+
+		<article class="col-sm-12 col-md-6 col-lg-6">
+
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-darken" data-widget-colorbutton="false" data-widget-editbutton="false">
+				<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+					<h2>Role</h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget edit box -->
+					<div class="jarviswidget-editbox">
+						<!-- This area used as dropdown edit box -->
+						
+					</div>
+					
+					<div class="widget-body-toolbar">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
+								<a class="btn btn-default" id="roleTableAdd">Add</a>
+								<a class="btn btn-default" id="roleTableEdit">Edit</a>
+								<a class="btn btn-danger" id="roleTableDelete">Delete</a>
+							</div>
+						</div>
+					</div>
+					<!-- end widget edit box -->
+
+					<!-- widget content -->
+					<div class="widget-body no-padding" id="roleTableContent">
+
+					</div>
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+				
+			</div>
+			<!-- end widget -->
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-darken" data-widget-colorbutton="false" data-widget-editbutton="false">
+				<header>
+					<span class="widget-icon"> <i class="fa fa-table"></i> </span>
+					<h2>Privilege</h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget edit box -->
+					<div class="jarviswidget-editbox">
+						<!-- This area used as dropdown edit box -->
+						
+					</div>
+					
+					<div class="widget-body-toolbar">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
+								<a class="btn btn-default" id="privilegeTableAdd">Add</a>
+								<a class="btn btn-default" id="privilegeTableEdit">Edit</a>
+								<a class="btn btn-default" id="privilegeTableDelete">Delete</a>
+							</div>
+						</div>
+					</div>
+					<!-- end widget edit box -->
+
+					<!-- widget content -->
+					<div class="widget-body no-padding" id="privilegeTableContent">
+					</div>
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+				
+			</div>
+		</article>
+<!-- NEW WIDGET START -->
+		<article class="col-sm-12 col-md-6 col-lg-6">
+
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-blue"  data-widget-colorbutton="false" data-widget-editbutton="false">
+				<!-- widget options:
+				usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+				data-widget-colorbutton="false"
+				data-widget-editbutton="false"
+				data-widget-togglebutton="false"
+				data-widget-deletebutton="false"
+				data-widget-fullscreenbutton="false"
+				data-widget-custombutton="false"
+				data-widget-collapsed="true"
+				data-widget-sortable="false"
+
+				-->
+				<header>
+					<span class="widget-icon"> <i class="fa fa-sitemap"></i> </span>
+					<h2>Role Tree </h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget content -->
+					<div class="widget-body" id="roleTree">
+						
+					</div>					
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+
+			</div>
+			<!-- end widget -->
+			
+			
+
+		</article>
+		<!-- WIDGET END -->
+		
+
+	</div>
+	<!-- end row -->
+
+</section>
+
+	
+	
+	
+<div class="modal fade" tabindex="-1" role="dialog" id="addPrivilegeToTree">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Add Privilege</h4>
+      </div>
+      <div class="modal-body">
+        <form action="" id="add-privilege-tree" class="smart-form">
+			<fieldset>
+				<section>
+					<label class="select"> <i class="icon-append fa fa-list"></i>
+						<select id="add-privilege-tree-select">
+							
+						</select>
+					</label>
+				</section>
+			</fieldset>
+		</form>
+      </div>
+      <div class="modal-footer">
+		<button type='button' class='btn btn-default' data-dismiss='modal'>
+			Cancel
+		</button>
+		<button type='button' class='btn btn-primary' id='addPrivilegeToTreeButton'>
+			Add
+		</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="deletePrivilegeModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Delete Privilege</h4>
+      </div>
+      <div class="modal-body">
+       Are you sure you want to delete?
+      </div>
+      <div class="modal-footer">
+		<button type='button' class='btn btn-default' data-dismiss='modal'>
+			Cancel
+		</button>
+		<button type='button' class='btn btn-danger' id='deletePrivilegeButton'>
+			Delete
+		</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- end widget grid -->
+<script src="js/services/role.service.js"></script>
+<script src="js/services/privilege.service.js"></script>
+<script src="js/controller/role.tree.controller.js"></script>
+
+<script type="text/javascript">
+//<![CDATA[
+	pageSetUp();
+
+	// PAGE RELATED SCRIPTS
+	// pagefunction
+	
+	var pagefunction = function() {
+		
+		
+		var responsiveHelper_dt_basic = undefined;
+		
+		var breakpointDefinition = {
+			tablet : 1024,
+			phone : 480
+		};
+		/* Get Services */
+		var roleService = new RoleService();
+		var privilegeService = new PrivilegeService();
+		/* End get services */
+		
+		var roleTreeController = new RoleTreeController({
+			roleService: roleService,
+			privilegeService: privilegeService,
+			modals: ['addPrivilegeToTree', 'deletePrivilegeFromTree'],
+			forms: 'add-privilege-tree',
+			privilegesListId: 'add-privilege-tree-select',
+			addButtonForm: 'addPrivilegeToTreeButton',
+			reloadEvent: function() {
+				reloadTreeLib();
+			}
+		});
+		roleTreeController.createTree('roleTree');
+		
+		var roleFormController = new FormController({
+			tableListUrl: "/api/role",
+			tableId: 'role_table',
+			tableHeaders: [{
+				dataHide: 'phone',
+				label: "ID",
+				name: 'roleId'
+			}, {
+				dataClass: 'expand',
+				icon: 'fa-fw',
+				label: 'Name',
+				name: 'roleName'
+				} 
+			],
+			tableViewId: "roleTableContent",
+			forms: {
+				name: 'role',
+				addElements: [
+					{
+						fieldset: [
+								{ icon: 'fa-user', type:'text', label: 'Role Name', name:'add-role-name', id:'add-role-name', placeholder:'Name of Role', required: true, editable: true }    		           
+						]
+					}   
+				],
+				editElements: [
+					{
+						fieldset: [
+									{ icon: 'fa-user', type:'text', label: 'Role Name', name:'edit-role-name', id:'edit-role-name', placeholder:'Name of Role', required: true, editable: true }    		           
+							]
+					}				               
+				]
+			},
+			service: roleService,
+			addFormShownAction: function() {
+				$("#add-role-name").focus();
+			},
+			editFormShownAction: function() {
+				$("#edit-role-name").focus();
+			},
+			getAddModel: function() {
+				return {
+					roleName: $("#add-role-name").val()
+				};
+			},
+			getEditModel: function(item) {
+				return {
+					roleId: item.roleId,
+					roleName: $("#edit-role-name").val()
+				};
+			},
+			getDeleteIds: function(items) {
+				var ids = [];
+				for(var i=0; i<items.length; i++) {
+					ids.push(items[i].roleId);
+				}
+				return ids.join(',');
+			},
+			mapModelToEditForm: function(item) {
+				$("#edit-role-name").val(item.roleName);	
+			},
+			dataChangeEvent: function() {
+				roleTreeController.reload();
+			}
+		});
+		var privilegeFormController = new FormController({
+			tableListUrl: "/api/privilege",
+			tableId: 'privilege_table',
+			tableHeaders: [{
+				dataHide: 'phone',
+				label: "ID",
+				name: 'privilegeId'
+			}, {
+				dataClass: 'expand',
+				icon: 'fa-fw',
+				label: 'Name',
+				name: 'privilege'
+				} 
+			],
+			tableViewId: "privilegeTableContent",
+			forms: {
+				name: 'privilage',
+				addElements: [
+					{
+						fieldset: [
+								{ icon: 'fa-user', type:'text', label: 'Privilege', name:'add-privilege', id:'add-privilege', placeholder:'Privilege', required: true, editable: true }    		           
+						]
+					}   
+				],
+				editElements: [
+					{
+						fieldset: [
+									{ icon: 'fa-user', type:'text', label: 'Privilege', name:'edit-privilege', id:'edit-privilege', placeholder:'Privilege', required: true, editable: true }    		           
+							]
+					}				               
+				]
+			},
+			service: privilegeService,
+			addFormShownAction: function() {
+				$("#add-privilege").focus();
+			},
+			editFormShownAction: function() {
+				$("#edit-privilege").focus();
+			},
+			getAddModel: function() {
+				return {
+					privilege: $("#add-privilege").val()
+				};
+			},
+			getEditModel: function(item) {
+				return {
+					privilegeId: item.privilegeId,
+					privilege: $("#edit-privilege").val()
+				};
+			},
+			getDeleteIds: function(items) {
+				var ids = [];
+				for(var i=0; i<items.length; i++) {
+					ids.push(items[i].privilegeId);
+				}
+				return ids.join(',');
+			},
+			mapModelToEditForm: function(item) {
+				$("#edit-privilege").val(item.privilege);	
+			},
+			dataChangeEvent: function() {
+				roleTreeController.reload();
+			}
+		});	
+		
+		$("#roleTableAdd").click(function(e) {
+			roleFormController.showAddModal();
+		});
+
+		$("#roleTableEdit").click(function(e) {
+			roleFormController.showEditModal();
+		});
+
+		$("#roleTableDelete").click(function(e) {
+			roleFormController.showDeleteModal();
+		});
+		$("#privilegeTableAdd").click(function(e) {
+			privilegeFormController.showAddModal();
+		});
+
+		$("#privilegeTableEdit").click(function(e) {
+			privilegeFormController.showEditModal();
+		});
+
+		$("#privilegeTableDelete").click(function(e) {
+			privilegeFormController.showDeleteModal();
+		});
+		
+		reloadTreeLib();
+		
+	};
+	
+	// end pagefunction
+	
+	// destroy generated instances 
+	// pagedestroy is called automatically before loading a new page
+	// only usable in AJAX version!
+
+	var pagedestroy = function(){
+		
+		/*
+		Example below:
+
+		$("#calednar").fullCalendar( 'destroy' );
+		if (debugState){
+			root.console.log("✔ Calendar destroyed");
+		} 
+
+		For common instances, such as Jarviswidgets, Google maps, and Datatables, are automatically destroyed through the app.js loadURL mechanic
+
+		*/
+
+
+	}
+
+	// end destroy
+
+	// run pagefunction on load
+
+	loadScript("js/plugin/datatables/jquery.dataTables.min.js", function(){
+		loadScript("js/plugin/datatables/dataTables.colVis.min.js", function(){
+			loadScript("js/plugin/datatables/dataTables.tableTools.min.js", function(){
+				loadScript("js/plugin/datatables/dataTables.bootstrap.min.js", function(){
+					loadScript("js/plugin/datatable-responsive/datatables.responsive.min.js", function(){
+						loadScript("js/plugin/datatable-select/js/dataTables.select.min.js",pagefunction)
+					});
+				});
+			});
+		});
+	});
+//]]>
+</script>

@@ -1,0 +1,91 @@
+package com.samsbeauty.warehouse.model;
+
+import java.io.Serializable;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.samsbeauty.warehouse.employee.model.WarehouseEmployee;
+
+@Entity
+@Table(name="warehouse_inbound")
+public class WarehouseInbound implements Serializable {
+	private static final long serialVersionUID = 1499792555499307409L;	
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="inbound_id")
+	private Long inboundId;
+	
+	@Column
+	private Integer quantity;
+	
+	@ManyToOne
+	@JoinColumn(name="item_id")
+	private WarehouseItem warehouseItem;
+	
+	@Column(name="r_date")
+	private Date regDate;
+
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="r_e_gid", referencedColumnName="gid")
+	private WarehouseEmployee regBy;
+
+	public WarehouseInbound() {}
+	
+	public WarehouseInbound(Long inboundId, Integer quantity, WarehouseItem warehouseItem, Date regDate, WarehouseEmployee regBy) {
+		this.inboundId = inboundId;
+		this.quantity = quantity;
+		this.warehouseItem = warehouseItem;
+		this.regDate = regDate;
+		this.regBy = regBy;
+	}
+	
+	public static WarehouseInboundBuilder builder(WarehouseItem warehouseItem) {
+		return new WarehouseInboundBuilder(warehouseItem);
+	}
+	
+	public static class WarehouseInboundBuilder {
+		private Long inboundId;
+		private Integer quantity;
+		private WarehouseItem warehouseItem;
+		private Date regDate;
+		private WarehouseEmployee regBy;
+		
+		public WarehouseInboundBuilder(WarehouseItem warehouseItem) {
+			this.warehouseItem = warehouseItem;
+		}
+		
+		public WarehouseInboundBuilder setQuantity(Integer quantity) {
+			this.quantity = quantity;
+			return this;
+		}
+		
+		public WarehouseInboundBuilder setWarehouseItem(WarehouseItem warehouseItem) {
+			this.warehouseItem = warehouseItem;
+			return this;
+		}
+		
+		public WarehouseInboundBuilder setRegDate(Date regDate) {
+			this.regDate = regDate;
+			return this;
+		}
+
+		public WarehouseInboundBuilder setRegBy(WarehouseEmployee regBy) {
+			this.regBy = regBy;
+			return this;
+		}
+		
+		public WarehouseInbound createWarehouseInbound() {
+			return new WarehouseInbound(inboundId, quantity, warehouseItem, regDate, regBy);
+		}
+	}
+}

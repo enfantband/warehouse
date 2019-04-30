@@ -1,0 +1,210 @@
+function FormController(obj) {
+	if(obj.tableListUrl == null) {
+		throw "Please specify url for the table";
+	}
+	this._table = new SbDataTable({
+		url: obj.tableListUrl,
+		columns: obj.tableColumns,
+		id: obj.tableId,
+		service: obj.service,
+		viewId: obj.tableViewId,
+		headers: obj.tableHeaders,
+		rowClick: obj.rowClick,
+		rowUnclick: obj.rowUnclick,
+		searchable: obj.searchable,
+		buttonEvents: obj.buttonEvents,
+		initLoad: obj.initLoad,
+		scrollY: obj.scrollY,
+		scrollCollapse: obj.scrollCollapse,
+		paging: obj.paging
+	});	
+	if(obj.forms == null) {
+		throw "Please specify the forms";
+	}
+	
+	this._formGenerator = new FormGenerator({
+		name: obj.forms.name,
+		addElements: obj.forms.addElements,
+		editElements: obj.forms.editElements
+	});
+	this._formGenerator.generate();	
+	
+	if(obj.getAddModel == null) {
+		throw "Please specify the model mapping to add";
+	}
+	
+	this._getAddModel = obj.getAddModel;
+	
+	if(obj.getEditModel == null) {
+		throw "Please specify the model mapping to edit";
+	}
+	
+	if( obj.getDeleteIds == null) {
+		throw "Please specify the model mapping to delete for " + obj.tableId;
+	}
+	
+	
+	if(obj.addPreCondition != null) {
+		this._addPreCondition = obj.addPreCondition;
+	}
+	
+	if(obj.editPreCondition != null) {
+		this._editPreCondition = obj.editPreCondition; 
+	}
+	
+	if(obj.deletePreCondition != null) {
+		this._deletePreCondition = obj.deletePreCondition;
+	}
+	
+	this._getEditModel = obj.getEditModel;
+	
+	
+	this._getDeleteIds = obj.getDeleteIds;
+	
+	this._mapModelToEditForm = obj.mapModelToEditForm;
+	
+	
+	if(obj.dataChangeEvent != null) {
+		this._dataChangeEvent = obj.dataChangeEvent;
+	} else {
+		this._dataChangeEvent = function(){};
+	}
+	
+	var $this = this;
+	if(obj.addFormShownAction != null) {
+		$this._addFormShownAction = obj.addFormShownAction;	
+	}
+	
+	if(obj.editFormShownAction != null) {
+		$this._editFormShownAction = obj.editFormShownAction;
+	}
+	
+	var callback = function() {
+		$this._formGenerator.getAddModal().on('shown.bs.modal', function(){
+			if($this._addFormShownAction != null){
+				$this._addFormShownAction();
+			}
+		});
+		$this._formGenerator.getEditModal().on('shown.bs.modal', function(){
+			if($this._editFormShownAction != null) {
+				$this._editFormShownAction();	
+			}
+		});
+		$this._formGenerator.getAddButton().click(function(e) {
+			if(formValidate("#" + $this._formGenerator.getAddFormId(), "with-errors", "")) {
+				/* Create model */
+				var model = $this._getAddModel();
+				$this._table.add(model, function(){
+					$("#" + $this._formGenerator.getAddFormId()).trigger("reset");
+					$this._formGenerator.getAddModal().modal('hide');
+					$this._dataChangeEvent();
+				});
+			}
+			
+		});
+		$this._formGenerator.getEditButton().click(function(e) {		
+			console.log($this._table);
+			if($this._table.getSelectedItem() == null) {
+				showMessage("Warning", "Please select an item to edit");
+			} else {
+				var item = $this._table.getSelectedItem();
+				if(formValidate("#", $this._formGenerator.getEditFormId(), "with-errors", "")) {
+					/* Create model */
+					var model = $this._getEditModel(item);
+					$this._table.update(model, function(){
+						$("#" + $this._formGenerator.getEditFormId()).trigger("reset");
+						$this._formGenerator.getEditModal().modal('hide');
+						$this._dataChangeEvent();
+					});
+				}	
+			}
+		});
+		$this._formGenerator.getDeleteButton().click(function(e) {
+			if($this._table.getSelectedItem() == null) {
+				showMessage("Warning", "Please select an item to delete");
+			} else {
+				$this._table.removeByIds($this._getDeleteIds($this._table.getSelectedItems()), function(){
+					$this._formGenerator.getDeleteModal().modal('hide');
+					$this._dataChangeEvent();
+				});
+			}
+		});
+	};
+	
+	if(obj.initLoad == null || obj.initLoad){
+		if(obj.type != null){
+			this._table.createTable(obj.type, callback);	
+		} else {
+			this._table.createTable('', callback);
+		}
+		this._loaded = true;
+	} else {
+		this._type = obj.type;
+		this._loaded = false;
+	}
+	
+};
+
+FormController.prototype = {
+	setCustomParamAndValue: function(customParam, customValue) {
+		this._table.setCustomParam(customParam);
+		this._table.setCustomValue(customValue);
+	},
+	showAddModal: function() {
+		if(this._addPreCondition != null) {
+			if(this._addPreCondition()) {
+				this._formGenerator.getAddModal().modal('show');	
+			}
+		} else {
+			this._formGenerator.getAddModal().modal('show');
+		}
+	},
+	showEditModal: function() {
+		var $this = this;
+		if($this.getSelectedItems() == null || $this.getSelectedItems().length == 0) {
+			showMessage("Warning", "Please select an item to edit");
+		} else {
+			var item = $this._table.getSelectedItems()[0];
+			$this._mapModelToEditForm(item);
+			if($this._editPreCondition != null) {
+				if($this._editPreCondition()) {
+					$this._formGenerator.getEditModal().modal('show');		
+				}
+			} else {
+				$this._formGenerator.getEditModal().modal('show');
+			}
+		}
+	},
+	showDeleteModal: function() {
+		var $this = this;
+		var item = $this._table.getSelectedItem();
+		if(item == null){
+			showMessage("Warning", "Please select an item to delete");
+		} else {
+			$this._formGenerator.getDeleteModal().modal('show');
+		}
+	},
+	getTable : function() {
+		return this._table.getTable();
+	},
+	draw : function() {
+		if(this._loaded) {
+			this._table.getTable().draw();
+		} else {
+			this._table.createTable(this._type);
+			this._loaded = true;
+		}
+	},
+	search: function(searchTxt) {
+		this._table.search(searchTxt);
+	},
+	getAllRows : function() {
+		return this._table.getAllRows();
+	},
+	getSelectedItems : function() {
+		return this._table.getSelectedItems();
+	},
+	reload: function() {
+		this.getTable().ajax.reload(null, false);
+	}
+}

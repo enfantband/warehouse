@@ -1,0 +1,70 @@
+swagger: 2.0
+info:
+  version: "0.0.1"
+  title: WarehouseItemBox API
+basePath: /warehouse
+paths:
+  /item:
+    get:
+      description:
+      parameters:
+        - name: pageSize
+          in: query
+          type: number
+          description: size of list
+          required: false
+        - name: page
+          in: query
+          type: integer
+          description: page
+          required: false
+        - name: sortingDirection
+          in: query
+          type: string
+          description: DESC | ASC
+          required: false
+        - name: sortingFields
+          in: query
+          type: string
+          description: sorting fields
+          required: false
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfWarehouseItemBox
+            type: array
+            items:
+              $ref: '#/definitions/WarehouseItemBox'
+    get:
+      parameters:
+        - name: WarehouseItemBox
+          in: body
+          description: The WarehouseItemBox JSON you want to post
+          schema:
+            $ref: '#/definitions/WarehouseItemBox'
+    post:
+      parameters:
+        - name: WarehouseItemBox
+          in: body
+          description: The WarehouseItemBox JSON you want to post
+          schema:
+            $ref: '#/definitions/WarehouseItemBox'
+    put:
+      parameters:
+        - name: WarehouseItemBox
+          in: body
+          description: The WarehouseItemBox JSON you want to post
+          schema:
+            $ref: '#/definitions/WarehouseItemBox'
+    delete:
+      parameters:
+        - name: WarehouseItemBox
+          in: body
+          description: The WarehouseItemBox JSON you want to post
+          schema:
+            $ref: '#/definitions/WarehouseItemBox'
+definitions:
+  WarehouseItemBox:
+    type: object
+    properties:

@@ -1,0 +1,573 @@
+
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="page-title txt-color-blueDark">
+			<i class="fa fa-mobile fa-fw "></i> Picking Job List
+		</h1>
+	</div>
+</div>
+
+<script src="js/plugin/morris/raphael.min.js"></script>
+<script src="js/plugin/morris/morris.min.js"></script>
+<!-- widget grid -->
+<section id="widget-grid" class="">
+
+	<!-- row -->
+	<div class="row">
+
+		<!-- NEW WIDGET START -->
+		<article class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-darken"
+				 id="wid-id-0"				
+					data-widget-colorbutton="false"
+					data-widget-editbutton="false"
+					data-widget-togglebutton="false"
+					data-widget-deletebutton="false"
+					data-widget-fullscreenbutton="false"
+					data-widget-custombutton="false"
+					data-widget-collapsed="false"
+					data-widget-sortable="false">
+				<!-- widget options:
+					usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+	
+					data-widget-colorbutton="false"
+					data-widget-editbutton="false"
+					data-widget-togglebutton="false"
+					data-widget-deletebutton="false"
+					data-widget-fullscreenbutton="false"
+					data-widget-custombutton="false"
+					data-widget-collapsed="true"
+					data-widget-sortable="false"
+	
+					-->
+				<header>
+					<span class="widget-icon"> <i class="fa fa-lg fa-calendar"></i>
+					</span>
+					<h2>Daily Picking Job List</h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget edit box -->
+					<div class="jarviswidget-editbox">
+						<!-- This area used as dropdown edit box -->
+
+					</div>
+					<!-- end widget edit box -->
+
+					<!-- widget content -->
+					<div class="widget-body">
+
+						<div class="widget-body-toolbar bg-color-white">
+
+							<form class="form-inline" role="form">
+								<div class="row">
+
+									<div class="col-sm-12 col-md-8">
+										<div class="form-group">
+											<input type="text" id="searchDate"
+												placeholder="Search Date..." class="form-control datepicker"
+												data-dateformat='mm/dd/yy' />
+										</div>
+									</div>
+
+									<div class="col-sm-12 col-md-4 text-align-right">
+
+										<!-- <button type="button" class="btn btn-default btn-xs">
+												<i class="fa fa-search"></i> Search
+											</button> -->
+										<button type="button" class="btn btn-warning btn-xs"
+											onclick="showJobCreationWindow()">
+											<i class="fa fa-plus"></i> Create
+										</button>
+
+									</div>
+
+								</div>
+							</form>
+
+						</div>
+
+						<div class="tree" id="treeView"></div>
+
+					</div>
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+
+			</div>
+			<!-- end widget -->
+
+		</article>
+		<article class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-darken"	id="wid-id-2"
+			data-widget-colorbutton="false"
+					data-widget-editbutton="false"
+					data-widget-togglebutton="false"
+					data-widget-deletebutton="false"
+					data-widget-fullscreenbutton="false"
+					data-widget-custombutton="false"
+					data-widget-collapsed="false"
+					data-widget-sortable="false"
+			>
+
+				<header>
+					<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i>
+					</span>
+					<h2>Picking Progress</h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div class="col-sm-12" id="progressOfPickingJobs">					
+				</div>
+				
+				<!-- end widget div -->
+
+			</div>
+			<!-- end widget -->
+
+		</article>
+		<!-- WIDGET END -->
+
+	</div>
+
+	<!-- end row -->
+
+	<!-- end row -->
+
+</section>
+<div class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+	id="inputMissingItem">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Manage Picking Items</h4>
+			</div>
+			<div class="modal-body">
+				<form action="" id="creaste-picking-job-group">
+					<fieldset>
+						<div class="row">
+							<div class="col-sm-12 col-md-12 col-lg-12">
+								<div class="form-group">
+									<label>Input/Scan Missing Item Barcode</label>
+									<input id="missingItemBarcodes" class="form-control"/> 						
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12 col-md-6 col-lg-6">
+								<div class="form-group">
+									<label>Date</label>
+									<input id="pickingDate" class="form-control datepicker" data-dateformat='mm/dd/yy'/> 						
+								</div>
+							</div>
+							<div class="col-sm-12 col-md-6 col-lg-6">
+								<div class="form-group">
+									<label>Time</label>
+									<input id="pickingTime" class="form-control"/> 						
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div id="pickingItemViewTableContent">
+							</div>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type='button' class='btn btn-default' data-dismiss='modal'>
+					Cancel</button>
+				<button type='button' class='btn btn-primary'
+					id="submitMissingItemBt">
+					Submit</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<div class="modal fade" tabindex="-1" role="dialog"
+	id="addPickingJobGroup">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Create Picking Job Set</h4>
+			</div>
+			<div class="modal-body">
+				<form action="" id="creaste-picking-job-group">
+					<fieldset>
+						<legend> Number of new orders: <span id="numberOfOrdersTxt" th:text="${numberOfNewOrders}"></span> </legend>
+						<div class="row">
+							<div class="col-sm-12 col-md-12 col-lg-12">
+
+								<div class="form-group">
+									<label>Number of Orders to Process</label>
+									<input type="text" class="form-control" id="numberOfOrders" placeholder="# of Orders to process" value="300" required="required" /> 									
+								</div>
+							</div>
+							<div class="col-sm-12 col-md-12 col-lg-12">
+								<div class="form-group">
+									<label>HairStyle21</label> 		
+									<input type="checkbox" class="form-control" id="includingAmzhs" checked="checked"/>								
+								</div>
+							</div>
+							
+							<div class="col-sm-12 col-md-12 col-lg-12">
+								<div class="form-group">
+									<label>eBeauty</label> 		
+									<input type="checkbox" class="form-control" id="includingAmzeb" checked="checked"/> 						
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12 col-md-12 col-lg-12">
+
+								<div class="form-group">
+									<label>Include Orders</label> 
+									<input id="includingOrders" class="form-control tagsinput" data-role="tagsinput"/> 									
+								</div>
+							</div>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type='button' class='btn btn-default' data-dismiss='modal'>
+					Cancel</button>
+				<button type='button' class='btn btn-primary'
+					id="createJobGroupButton" onclick="createJobGroup()">
+					Create</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<!-- end widget grid -->
+<script src="js/services/pickingjob.service.js"></script>
+<script src="js/services/employee.service.js"></script>
+<script src="js/services/order.service.js"></script>
+<script src="js/services/filedownload.token.service.js"></script>
+<script src="js/services/pickingItemInfo.service.js"></script>
+<script src="js/controller/pickingjob.tree.controller.js"></script>
+<script src="js/controller/pickingjob.progress.controller.js"></script>
+<script src="js/view/pickingjob.tree.view.js"></script>
+<script src="js/view/pickingjob.progress.view.js"></script>
+<script type="text/javascript">
+
+//<![CDATA[
+	pageSetUp();
+	var barChartData;
+	// pagefunction
+	var pickingJobService = new PickingJobService();
+	var employeeService = new EmployeeService();
+	var filedownloadTokenService = new FiledownloadTokenService();
+	var orderService = new OrderService();
+	
+	var pickingJobProgressController = new PickingJobProgressController({
+		pickingJobService : pickingJobService,
+		viewId : "progressOfPickingJobs"
+	});
+	var pickingItemInfoService = new PickingItemInfoService();
+	var pickingItemViewForm;
+	
+	var pickingJobTreeController = new PickingJobTreeController({
+		pickingJobService : pickingJobService,
+		employeeService : employeeService,
+		filedownloadTokenService : filedownloadTokenService,
+		openMissingItemInputWindowAction: function(pickingJobId, timelineId, employeeId) {			
+			// add input event 
+			$("#missingItemBarcodes").keydown(function(e) {
+				if(e.which == 13 && $(this).val() != "") {
+					pickingItemViewForm.search($(this).val());
+					var rows = pickingItemViewForm.getTable().rows();
+					var find = false;
+					for(var i=0; i<rows.data().length; i++) {
+						var generatedBarcode = pickingItemViewForm.getTable().cell(i, 1).data();
+						var productBarcode = pickingItemViewForm.getTable().cell(i,2).data();
+						if(generatedBarcode == $(this).val() || productBarcode == $(this).val()) {
+							find = true;
+							var mis = pickingItemViewForm.getTable().cell(i, 4).data();
+							var total = pickingItemViewForm.getTable().cell(i, 6).data();
+							var picked = pickingItemViewForm.getTable().cell(i, 5).data();
+							if(mis + 1 > total - picked) {
+								showMessage("Error", "Missed quantity cannot exceed the total quantity!!");
+								break;
+							} else {
+								pickingItemViewForm.getTable().cell(i, 4).data(mis + 1);
+							}
+						}
+					}
+					if(!find) {
+						showMessage("Error", "No matching items found");
+					}
+					$(this).val('');
+					$(this).focus();
+				}
+			});
+			$("#submitMissingItemBt").unbind('click');
+			$("#submitMissingItemBt").click(function(e) {
+				$("#submitMissingItemBt").button('loading');
+				if($("#pickingTime").val() == '') {
+					showMessage("error", "Please input picking time");
+					$("#submitMissingItemBt").button('reset');
+				} else if($("#pickingDate").val() == '') {
+					showMessage("error", "Please input picking date");
+					$("#submitMissingItemBt").button('reset');
+				} else {
+					if(pickingItemViewForm != null) {
+						var rows = pickingItemViewForm.getTable().rows();
+						var inputDatas = [];
+						for(var i=0; i<rows.data().length; i++) {
+							var missed = pickingItemViewForm.getTable().cell(i, 4).data();
+							var obj = {
+								generatedBarcode: pickingItemViewForm.getTable().cell(i, 1).data(),
+								productBarcode: pickingItemViewForm.getTable().cell(i, 2).data(),
+								missedQuantity: missed,
+								orderQuantity: pickingItemViewForm.getTable().cell(i, 6).data()
+							};
+							
+							inputDatas.push(obj);
+						}
+						console.log(inputDatas);
+						var data = {
+							pickingJobId: pickingJobId,
+							timelineId: timelineId,
+							pickingItemInfos: inputDatas,
+							pickingTime: $("#pickingTime").val(),
+							pickingDate: $("#pickingDate").val()
+						}
+						pickingItemInfoService.addMissingItems(data, function(){
+							$("#inputMissingItem").modal('hide');
+							// refresh picking progress
+							var searchDate = $("#searchDate").val();							
+							if(searchDate == '') {
+								var date = new Date();
+								var month = date.getMonth() + 1;
+								var day = date.getDate();
+								var monthStr = '';
+								var dayStr = '';
+								if(month < 10) {
+									monthStr = '0' + month;
+								} else {
+									monthStr = month;
+								}
+								if(day < 10) {
+									dayStr = '0' + day;
+								} else {
+									dayStr = day;
+								}							
+								searchDate = monthStr + "/" + dayStr + "/" + date.getFullYear();
+							}
+							pickingJobTreeController.load(searchDate);
+							pickingJobProgressController.load(searchDate);
+
+							$("#submitMissingItemBt").button('reset');
+						});
+					}	
+				}
+			});
+			
+			// implement for missing item input.
+			if(pickingItemViewForm != null) {
+				pickingItemViewForm.getTable().destroy();	
+			}
+			$("#pickingItemViewTableContent").empty();
+			pickingItemViewForm  = new FormController({
+				tableListUrl: "/api/pickingJob/" + pickingJobId + "/pickingItemInfos",
+				tableId: "pickingItemViewTable",
+				tableViewId: "pickingItemViewTableContent",
+				scrollY: '40vh',
+				scrollCollapse: true,
+				paging: false,
+				tableHeaders: [
+					{
+						label: "ID",
+						name: "pickingItemInfoId"
+					},               
+					{
+						label: "SKU",
+						name: "generatedBarcode"
+					},
+					{
+						label: "Barcode",
+						name: "productBarcode"
+					},
+					{
+						label: "Title",
+						name: "title"
+					},
+					{
+						label: "Missed Qty",
+						name: "missedQuantity"
+					},
+					{
+						label: "Picked Qty",
+						name: "pickedQuantity",
+						visible: false
+					},
+					{
+						label: "Total Qty",
+						name: "orderQuantity"
+					}
+				],
+				service: pickingItemInfoService,
+				addFormShownAction: function() {
+					$("#add-name").focus();
+				},
+				editFormShownAction: function() {
+					$("#edit-name").focus();
+				},
+				forms: {
+					name: 'orderItemInfo',
+					addElements: [
+					],
+					editElements: [			               
+					]
+				},
+				getAddModel: function() {
+				},
+				getEditModel: function(item) {
+				},
+				getDeleteIds: function(items) {
+				},
+				mapModelToEditForm: function(item) {
+				},
+				dataChangeEvent: function() {
+				}
+				
+			});
+			$("#inputMissingItem").modal('show');
+		},
+		viewId : "treeView"
+	});
+	
+	pickingJobTreeController.init();
+	pickingJobProgressController.init();
+	function createJobGroup() {
+		if (formValidate("#creaste-picking-job-group", "with-errors", "")) {
+			$("#createJobGroupButton").button("loading");
+
+			var errorEvent = function() {
+				$("#createJobGroupButton").button('reset');
+			}
+			var successEvent = function(data) {
+				pickingJobTreeController.load();
+				pickingJobProgressController.load();
+				$("#addPickingJobGroup").modal('hide');
+				$("#createJobGroupButton").button('reset');
+				$.smallBox({
+					title : "Picking Job Creation",
+					content : "<i class='fa fa-clock-o'></i> "
+							+ data.totalItems + " items are processed <i></i>",
+					color : "#659265",
+					iconSmall : "fa fa-check fa-2x fadeInRight animated",
+					timeout : 4000
+				});
+			};
+			var amzhs = 0;
+			var amzeb = 0;
+			if($("#includingAmzhs").is(':checked')) {
+				amzhs = 1;
+			}
+			if($("#includingAmzeb").is(':checked')) {
+				amzeb = 1;
+			}
+			var parameter = {
+				numberOfOrders: $("#numberOfOrders").val(),
+				includingOrders: $("#includingOrders").val(),
+				amzhs: amzhs,
+				amzeb: amzeb
+			};
+			pickingJobService.create(parameter, successEvent, errorEvent);
+		}
+	}
+	function showJobCreationWindow() {
+		// reload number of Orders
+		var numberOfOrders = orderService.getNumberOfNewOrders();
+		$("#numberOfOrdersTxt").html(numberOfOrders);
+		$("#addPickingJobGroup").modal('show');
+	}
+	var pagefunction = function() {
+		$('.progress-bar').progressbar({
+			display_text : 'fill'
+		});
+		$('#pickingTime').timepicker({
+		    defaultTime: 'current',
+			minuteStep: 1,
+		    template: 'dropdown'
+		});
+		$('.tagsinput').tagsinput('refresh');
+
+		$("#searchDate").change(function() {
+			pickingJobProgressController.load($(this).val());
+			pickingJobTreeController.load($(this).val());
+		});
+		
+		var responsiveHelper_dt_basic = undefined;
+		
+
+	};
+	var pagedestroy = function() {
+
+		//destroy all charts
+
+		$('.tagsinput').tagsinput('destroy');
+	
+	}
+
+	// load related plugins
+
+	loadScript(
+			"js/plugin/datatables/jquery.dataTables.min.js",
+			function() {
+				loadScript(
+						"js/plugin/datatables/dataTables.colVis.min.js",
+						function() {
+							loadScript(
+									"js/plugin/datatables/dataTables.tableTools.min.js",
+									function() {
+										loadScript(
+												"js/plugin/datatables/dataTables.bootstrap.min.js",
+												function() {
+													loadScript(
+															"js/plugin/datatable-responsive/datatables.responsive.min.js",
+															function() {
+																loadScript(
+																		"js/plugin/chartjs/chart.min.js",
+																		function() {
+																			loadScript(
+																					"js/plugin/bootstrap-tags/bootstrap-tagsinput.min.js",
+																					function(){
+																						loadScript(
+																							"js/plugin/bootstrap-progressbar/bootstrap-progressbar.min.js", 
+																							function(){
+																								loadScript("js/plugin/datatable-select/js/dataTables.select.min.js",pagefunction)
+																							})	
+																					})
+																		})
+															})
+												});
+									});
+						});
+			});
+//]]>
+</script>

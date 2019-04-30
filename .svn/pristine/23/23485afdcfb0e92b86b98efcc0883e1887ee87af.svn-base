@@ -1,0 +1,250 @@
+<!-- Bread crumb is created dynamically -->
+<!-- row -->
+<div class="row">
+	
+	<!-- col -->
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="page-title txt-color-blueDark">
+			
+			<!-- PAGE HEADER -->
+			<i class="fa-fw fa fa-home"></i> 
+			DASHBOARD
+		</h1>
+	</div>
+	<!-- end col -->
+	
+	<div class="widget-body-toolbar">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
+								<a class="btn btn-default" id="getWareHouse">Warehouse</a>
+								<a class="btn btn-default" id="getPerformance">Performance</a>
+							</div>
+						</div>
+					</div>
+		</div>
+<!-- end row -->
+
+
+	<!-- row -->
+
+	<div class="row">
+
+		<div class="col-sm-12">
+		
+		<!-- WIDGET END -->
+		<article class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
+				<header>				
+					<span class="widget-icon"> <i class="fa fa-list-alt"></i> </span>
+					<h2>WS Request</h2>
+				</header>
+
+				<!-- widget div-->
+				<div>	
+
+					<!-- widget edit box -->
+					<div class="jarviswidget-editbox">
+						
+					</div>
+					
+					<!-- end widget edit box -->
+				
+					
+					<!-- widget content -->
+					<div class="widget-body no-padding" id="woonseokTable">
+
+					</div>
+					
+					
+					
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+				
+			</div>
+			<!-- end widget -->
+
+		</article>
+		
+			<article class="col-sm-12 col-md-6 col-lg-6">
+
+			<!-- Widget ID (each widget will need unique ID)-->
+			<div class="jarviswidget jarviswidget-color-blue"  data-widget-colorbutton="false" data-widget-editbutton="false">
+				<!-- widget options:
+				usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+				data-widget-colorbutton="false"
+				data-widget-editbutton="false"
+				data-widget-togglebutton="false"
+				data-widget-deletebutton="false"
+				data-widget-fullscreenbutton="false"
+				data-widget-custombutton="false"
+				data-widget-collapsed="true"
+				data-widget-sortable="false"
+
+				-->
+				<header>
+					<span class="widget-icon"> <i class="fa fa-sitemap"></i> </span>
+					<h2> Report </h2>
+
+				</header>
+
+				<!-- widget div-->
+				<div>
+
+					<!-- widget content -->
+					<div class="widget-body" id="roleTree">
+						
+					</div>					
+					<!-- end widget content -->
+
+				</div>
+				<!-- end widget div -->
+
+			</div>
+			<!-- end widget -->
+			
+			
+
+		</article>
+		<!-- WIDGET END -->
+		
+		
+		
+		
+		
+		</div>
+			
+	</div>
+
+	<!-- end row -->
+
+<script src="js/services/login.service.js"></script>
+<script src="js/view/pickingjob.progress.view.js"></script>
+<script src="js/services/woonseok.service.js"></script>
+<script type="text/javascript">
+
+//<![CDATA[
+
+	pageSetUp();
+	
+	var woonseokService = new WoonseokService();	
+	// pagefunction
+	
+		
+	var pagefunction = function() {
+
+			var woonseokController = new FormController({
+				tableListUrl: "/api/woonseok",
+				tableId: 'woonseok',
+				tableViewId: "woonseokTable",
+				tableHeaders: [
+				 			{
+				        		dataHide: "",
+				        		label: "REQUEST UID ",
+								name: 'requestId'
+				        	},
+				        	{
+				        		dataHide: "",
+				        		label: "REASON",
+				        		name: "reason"
+				        	},
+				        	{
+				        		dataHide: "",
+				        		label: "STATUS",
+				        		name: "status"
+				        	},
+				        	{
+				        		dataHide: "",
+				        		label: "REG DATE",
+				        		name: "regDate",
+				        		type: "date"
+				        	},
+				        	{
+				        		
+				        		icon: "fa-barcode",
+				        		label: "SKU",
+								name: "woonseokChild",
+								nameField: "address",
+								dataHide: "phone",
+								type: "list-label"
+				        	}
+				               ],
+				service: woonseokService,
+				addFormShownAction: function() {
+					
+				},
+				editFormShownAction: function() {
+					
+				},
+				forms: {
+					name: 'menu',
+					addElements: [ 
+					],
+					editElements: [		               
+					]
+				},
+				getAddModel: function() {
+					return {};
+				},
+				getEditModel: function(item) {
+					return {};
+				},
+				getDeleteIds: function(items) {
+					var ids = [];
+					for(var i=0; i<items.length; i++) {
+						ids.push(items[i].requestId);
+					}
+					return ids.join(',');
+				},
+				mapModelToEditForm: function(item) {
+					$("#edit-name").val(item.name);
+					$("#edit-description").val(item.description);
+					$("#edit-url").val(item.url);
+					$("#edit-icon").val(item.icon);
+					$("#edit-ordered").val(item.ordered);	
+				},
+				dataChangeEvent: function() {
+				}
+			});
+	
+		
+		
+		$("#getWareHouse").click(function(e) {
+
+			
+			if(woonseokController.getSelectedItems() == null || woonseokController.getSelectedItems().length == 0) {
+				showMessage("error", "Please select a request");
+			} else {
+				var items = woonseokController.getSelectedItems();
+				var ids = [];
+				for(var i=0; i<items.length; i++) {
+					ids.push(items[i].requestId);
+				}
+				    console.log('ids',ids);
+				
+			}
+		});
+	};
+		var pagedestroy = function(){
+		}
+
+
+
+	// run pagefunction
+	loadScript("js/plugin/datatables/jquery.dataTables.min.js", function(){
+		loadScript("js/plugin/datatables/dataTables.colVis.min.js", function(){
+			loadScript("js/plugin/datatables/dataTables.tableTools.min.js", function(){
+				loadScript("js/plugin/datatables/dataTables.bootstrap.min.js", function(){
+					loadScript("js/plugin/datatable-responsive/datatables.responsive.min.js", function(){
+						loadScript("js/plugin/datatable-select/js/dataTables.select.min.js",pagefunction);
+					});
+				});
+			});
+		});
+	});
+//]]>
+</script>

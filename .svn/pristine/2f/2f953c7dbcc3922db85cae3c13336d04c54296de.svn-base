@@ -1,0 +1,10 @@
+server.port=9991
+logging.level.org.hibernate.SQL=DEBUG
+logging.level.org.hibernate.type=TRACE
+logging.level.org.springframework.web=DEBUG
+logging.lovel.org.springframework.security=DEBUG
+
+samsbeauty.api.key.common=bmneijrmvikfdsamoplds
+samsbeauty.api.key.picking=vwmfedjkvmniwrujtn
+samsbeauty.api.url=http://backoffice.samslocal.com:9090/administrator/
+samsbeauty.api.company=inventory/CompanyListJSON.sams

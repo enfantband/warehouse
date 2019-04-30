@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"  xmlns:layout="http://www.thymeleaf.org">	
+	<head layout:include="common/layout :: header">			
+		<title>Login</title>
+	</head>
+
+	<body class="">
+
+		<div class="container">
+		    <div class="row">
+		        <div class="col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 text-center animated fadeInDown">
+		            <div>
+		                <h1 class="logo-name">SamsBeauty WMS</h1>
+		            </div>
+		            <h3>Warehouse Management System</h3>
+		
+		
+		            <form th:action="@{/login}" role="form" method="post" id="loginForm">
+		                <div class="form-group">
+		                    <input type="text" class="form-control" id="gid" name="gid" placeholder="gid" required="" />
+		                </div>
+		                <div class="form-group">
+		                    <input type="password" class="form-control" id="password" placeholder="Password" name="password" required="" />
+		                </div>
+					    <div class="form-group">
+					       <label class="checkbox">
+							<!-- <input type="checkbox" name="remember-me" checked="" /> -->
+							<i></i>Stay signed in</label>
+					    </div>
+		                <button type="submit" class="btn btn-primary btn-block m-b">Login</button>
+		                <br/>
+		            </form>
+		            <div id="error">
+		            </div>           
+		            <p class="m-t">
+		                <small>SamsBeauty Warehouse Management System © 2016</small>
+		            </p>
+		        </div>
+		    </div>
+		</div>
+		
+		<!-- #PLUGINS -->
+		<!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+		<!-- IMPORTANT: APP CONFIG -->
+		<script src="js/app.config.seed.js"></script>
+		<!-- BOOTSTRAP JS -->
+		<script src="js/bootstrap/bootstrap.min.js"></script>
+
+		<script src="js/util.js"></script>
+		<script src="js/formGenerator/form.generator.js"></script>
+		<script src="js/formGenerator/form.util.js"></script>
+
+		<!-- MAIN APP JS FILE -->
+		<script src="js/app.seed.js"></script>
+		<script src="js/services/login.service.js"></script>
+		<script>
+		//<![CDATA[
+		var loginService = new LoginService();
+		$(document).ready(function(){
+			$("#error").html("");
+			$("#loginForm").submit(function(e){
+				setCookie("token","");
+				setCookie("refreshToken", "");
+				$("#error").html("");
+				e.preventDefault();
+				loginService.login($("#gid").val(), $("#password").val(), function(res){
+					// success event
+					if(!res.token) {
+						addErrorAlertDiv($("#error"), "Login Failed", "The gid or password you have entered is invalid, try again.");
+					} else {
+						setCookie("token", res.token, 1);
+						setCookie("refreshToken", res.refreshToken, 2);
+						location.href="/";
+					}
+				}, function(){
+					addErrorAlertDiv($("#error"), "Login Failed", "The gid or password you have entered is invalid, try again.");
+				});
+			});
+		});
+		//]]>
+		</script>
+	</body>
+	
+</html>

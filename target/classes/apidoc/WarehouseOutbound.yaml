@@ -1,0 +1,70 @@
+swagger: 2.0
+info:
+  version: "0.0.1"
+  title: WarehouseOutbound API
+basePath: /warehouse
+paths:
+  /outbound:
+    get:
+      description:
+      parameters:
+        - name: pageSize
+          in: query
+          type: number
+          description: size of list
+          required: false
+        - name: page
+          in: query
+          type: integer
+          description: page
+          required: false
+        - name: sortingDirection
+          in: query
+          type: string
+          description: DESC | ASC
+          required: false
+        - name: sortingFields
+          in: query
+          type: string
+          description: sorting fields
+          required: false
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfWarehouseOutbound
+            type: array
+            items:
+              $ref: '#/definitions/WarehouseOutbound'
+    get:
+      parameters:
+        - name: WarehouseOutbound
+          in: body
+          description: The WarehouseOutbound JSON you want to post
+          schema:
+            $ref: '#/definitions/WarehouseOutbound'
+    post:
+      parameters:
+        - name: WarehouseOutbound
+          in: body
+          description: The WarehouseOutbound JSON you want to post
+          schema:
+            $ref: '#/definitions/WarehouseOutbound'
+    put:
+      parameters:
+        - name: WarehouseOutbound
+          in: body
+          description: The WarehouseOutbound JSON you want to post
+          schema:
+            $ref: '#/definitions/WarehouseOutbound'
+    delete:
+      parameters:
+        - name: WarehouseOutbound
+          in: body
+          description: The WarehouseOutbound JSON you want to post
+          schema:
+            $ref: '#/definitions/WarehouseOutbound'
+definitions:
+  WarehouseOutbound:
+    type: object
+    properties:

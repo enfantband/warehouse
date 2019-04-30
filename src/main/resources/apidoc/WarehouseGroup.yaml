@@ -1,0 +1,70 @@
+swagger: 2.0
+info:
+  version: "0.0.1"
+  title: WarehouseGroup API
+basePath: /warehouse
+paths:
+  /group:
+    get:
+      description:
+      parameters:
+        - name: pageSize
+          in: query
+          type: number
+          description: size of list
+          required: false
+        - name: page
+          in: query
+          type: integer
+          description: page
+          required: false
+        - name: sortingDirection
+          in: query
+          type: string
+          description: DESC | ASC
+          required: false
+        - name: sortingFields
+          in: query
+          type: string
+          description: sorting fields
+          required: false
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfWarehouseGroup
+            type: array
+            items:
+              $ref: '#/definitions/WarehouseGroup'
+    get:
+      parameters:
+        - name: WarehouseGroup
+          in: body
+          description: The WarehouseGroup JSON you want to post
+          schema:
+            $ref: '#/definitions/WarehouseGroup'
+    post:
+      parameters:
+        - name: WarehouseGroup
+          in: body
+          description: The WarehouseGroup JSON you want to post
+          schema:
+            $ref: '#/definitions/WarehouseGroup'
+    put:
+      parameters:
+        - name: WarehouseGroup
+          in: body
+          description: The WarehouseGroup JSON you want to post
+          schema:
+            $ref: '#/definitions/WarehouseGroup'
+    delete:
+      parameters:
+        - name: WarehouseGroup
+          in: body
+          description: The WarehouseGroup JSON you want to post
+          schema:
+            $ref: '#/definitions/WarehouseGroup'
+definitions:
+  WarehouseGroup:
+    type: object
+    properties:

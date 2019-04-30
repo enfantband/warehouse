@@ -1,0 +1,209 @@
+package com.samsbeauty.warehouse.controllers;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.samsbeauty.warehouse.employee.model.WarehouseEmployee;
+import com.samsbeauty.warehouse.employee.service.WarehouseEmployeeService;
+import com.samsbeauty.warehouse.exception.rest.WrongParameterException;
+import com.samsbeauty.warehouse.model.WarehouseLevel;
+import com.samsbeauty.warehouse.model.WarehouseSubgroup;
+import com.samsbeauty.warehouse.model.converter.WarehouseLevelStatusConverter;
+import com.samsbeauty.warehouse.model.converter.WarehouseLevelTypeConverter;
+import com.samsbeauty.warehouse.service.WarehouseLevelService;
+import com.samsbeauty.warehouse.service.WarehouseSubgroupService;
+import com.samsbeauty.warehouse.tag.model.WarehouseTag;
+import com.samsbeauty.warehouse.util.BarcodeUtil;
+import com.samsbeauty.warehouse.util.LocationUtil;
+
+@RestController
+@RequestMapping("/api/warehouse/level")
+public class WarehouseLevelController {
+
+	@Autowired private WarehouseLevelService warehouseLevelService;	
+	@Autowired private WarehouseSubgroupService warehouseSubgroupService;
+	@Autowired private WarehouseEmployeeService warehouseEmployeeService;
+
+	@Value("${page.default.num}")
+	protected Integer DEFAULT_NUM_PER_PAGE;
+
+	// Retrieve All Resources
+	@RequestMapping(method=RequestMethod.GET)
+	ResponseEntity<Page<WarehouseLevel>> getAll(
+					@RequestParam(name="pageSize", required=false) Integer pageSize,
+					@RequestParam(name="page", required=false) Integer page,
+					@RequestParam(name="warehouseId", required=false) Long warehouseId,
+					@RequestParam(name="aisleId", required=false) Long aisleId,
+					@RequestParam(name="groupId", required=false) Long groupId,
+					@RequestParam(name="subgroupId", required=false) Long subgroupId,
+					@RequestParam(name="levelCode", required=false) String levelCode,
+					@RequestParam(name="search", required=false) String search,
+					@RequestParam(name="sortingDirections", required=false) String sortingDirection,
+					@RequestParam(name="sortingFields", required=false) String sortingField) throws WrongParameterException {
+		if(levelCode == null) levelCode = "";
+		
+		if(pageSize == null){
+			pageSize = DEFAULT_NUM_PER_PAGE;
+		}
+		if(page == null) {
+			page = 1;
+		}
+		Sort sort = null;
+		if(sortingDirection != null && sortingField != null) {
+			String[] directions = sortingDirection.split(" ");
+			String[] sortingFields = sortingField.split(" ");
+			if(directions.length > 0) {
+				if(directions.length != sortingFields.length) {
+					throw new WrongParameterException("Number of sorting field and direction are different.");
+				}
+				sort = new Sort(Sort.Direction.fromString(directions[0]), sortingFields[0]);
+				if(directions.length > 1) {
+					for(int i=1; i<directions.length; i++) {
+						sort = sort.and(new Sort(Sort.Direction.fromString(directions[i]), sortingFields[i]));
+					}
+				}
+			}
+		} else {
+			sort = new Sort(Sort.Direction.DESC, "levelId");
+		}
+		Page<WarehouseLevel> warehouseLevelList;
+		
+			 
+		if(search != null && !search.equals("") && !LocationUtil.IsLocationBarcode(search)) {
+			warehouseLevelList = warehouseLevelService.getAllByTag(warehouseId, aisleId, groupId, subgroupId, search, page, pageSize, sort);
+		} else {
+			if(LocationUtil.IsLocationBarcode(search)) {
+				warehouseLevelList = warehouseLevelService.getAllByLocationBarcode(BarcodeUtil.getLocationCode(search), page, pageSize, sort);
+			} else {
+				warehouseLevelList = warehouseLevelService.getAllByTag(warehouseId, aisleId, groupId, subgroupId, search, page, pageSize, sort);
+			}
+
+		}
+		
+		return new ResponseEntity<Page<WarehouseLevel>>(warehouseLevelList, HttpStatus.OK);
+	}
+
+	@RequestMapping(method=RequestMethod.POST, value="/subgroup/{subgroupId}")
+	ResponseEntity<List<WarehouseLevel>> add(
+			@PathVariable Long subgroupId, 
+			@RequestParam(name="numberOfLevels", required=true) final Integer numberOfLevels,
+			@RequestParam(name="levelType", required=true) final String levelType,
+			@RequestParam(name="levelStatus", required=true) final String levelStatus,
+			HttpServletRequest request) {
+		WarehouseSubgroup warehouseSubgroup = warehouseSubgroupService.getOne(subgroupId);
+
+		String gid = (String) request.getAttribute("GID");
+		WarehouseEmployee regBy = warehouseEmployeeService.getOneByGid(gid);
+		List<WarehouseLevel> addedList = new ArrayList<>();
+		
+		Integer maxLevel = warehouseLevelService.getMaxCode(subgroupId);
+		Integer start = maxLevel + 1;
+		for(int i=0; i<numberOfLevels; i++) {
+			StringBuilder tagLabel = new StringBuilder();
+			if(start < 10) {
+				tagLabel.append("0");
+			}
+			tagLabel.append(start.toString());
+			WarehouseTag warehouseTag = WarehouseTag.builder()
+					.setDescription("")
+					.setName(WarehouseTag.NameCode.LEVEL)
+					.setTag(tagLabel.toString())
+					.createWarehouseTag();
+			
+			WarehouseLevel newWarehouseLevel = WarehouseLevel.builder(warehouseTag)
+					.setWarehouseSubgroup(warehouseSubgroup)
+					.setLevelCode(warehouseTag.getTag())
+					.setLevelStatus(levelStatus)
+					.setLevelType(levelType)
+					.setRegBy(regBy)
+					.setModBy(regBy)
+					.setRegDate(new Date())
+					.setModDate(new Date())
+					.createWarehouseLevel();
+			
+			start ++;
+			warehouseLevelService.save(newWarehouseLevel);
+			addedList.add(newWarehouseLevel);
+		}
+		
+		//Implement here
+		return new ResponseEntity<List<WarehouseLevel>>(addedList, HttpStatus.OK);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, value="/generatedBarcodes")
+	Map<String, List<WarehouseLevel>> findLocationWithBarcodes(@RequestParam(name="generatedBarcodes", required=true) String generatedBarcodes) {		
+		List<String> list = Arrays.asList(generatedBarcodes.split(","));
+		Map<String, List<WarehouseLevel>> map = new HashMap<>();
+		for(String barcode : list) {
+			if(!map.containsKey(barcode)) {
+				List<WarehouseLevel> locations = warehouseLevelService.getAllByGeneratedBarcodeAndType(barcode, WarehouseLevel.LevelType.PICKING);
+				map.put(barcode, locations);	
+			}
+		}
+		return map;
+	}
+
+	@RequestMapping(method=RequestMethod.PUT)
+	WarehouseLevel update(@RequestBody @Valid final WarehouseLevel warehouseLevel, HttpServletRequest request) {
+		WarehouseLevel ol = warehouseLevelService.getOne(warehouseLevel.getLevelId());
+		
+		String gid = (String) request.getAttribute("GID");
+		WarehouseEmployee modBy = warehouseEmployeeService.getOneByGid(gid);
+		
+		ol.update(warehouseLevel.getLevelType(), warehouseLevel.getLevelStatus(), modBy, new Date());
+		
+		return warehouseLevelService.save(ol);
+	}
+
+	@RequestMapping(method=RequestMethod.DELETE, value="/{levelId}")
+	WarehouseLevel delete(@PathVariable Long levelId) {
+		WarehouseLevel deleteWarehouseLevel = warehouseLevelService.getOne(levelId);
+		warehouseLevelService.delete(levelId);
+		return  deleteWarehouseLevel;
+	}
+	
+	@RequestMapping(method=RequestMethod.DELETE, value="/ids/{levelIds}")
+	ResponseEntity<List<WarehouseLevel>> deleteByIds(@PathVariable String levelIds) {
+		List<String> ids = Arrays.asList(levelIds.split(","));
+		List<WarehouseLevel> deletedList = new ArrayList<>();
+		for(String id : ids) {
+			Long levelId = Long.valueOf(id);
+			WarehouseLevel deletedLevel = warehouseLevelService.getOne(levelId);
+			deletedList.add(deletedLevel);
+			deletedLevel.delete();
+			warehouseLevelService.save(deletedLevel);
+		}
+		
+		return new ResponseEntity<List<WarehouseLevel>> (deletedList, HttpStatus.OK);
+	}
+
+	@RequestMapping(method=RequestMethod.GET, value="/levelType")
+	ResponseEntity<Map<String, String>> getLevelStatus() {
+		return new ResponseEntity<>(WarehouseLevelTypeConverter.levelTypeValue, HttpStatus.OK);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, value="/levelStatus")
+	ResponseEntity<Map<String, String>> getLevelType() {
+		return new ResponseEntity<>(WarehouseLevelStatusConverter.levelStatusValue, HttpStatus.OK);
+	}
+}
